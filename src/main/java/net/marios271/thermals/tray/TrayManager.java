@@ -13,12 +13,15 @@ public class TrayManager {
         SystemTray sysTray = SystemTray.getSystemTray();
         Dimension sysTrayDims = sysTray.getTrayIconSize();
 
-        // placeholder temp for now
-        int temp = 50;
-        BufferedImage img = new TrayIconDrawer().draw(temp, sysTrayDims);
+        // placeholder temps for now
+        int cpuTemp = 50;
+        int gpuTemp = 50;
+
+        BufferedImage img = new TrayIconDrawer().draw(cpuTemp, sysTrayDims);
 
         TrayIcon icon = new TrayIcon(img);
         icon.setImageAutoSize(false);
+        icon.setToolTip("Thermals\n\nCPU: " + cpuTemp + " °C\nGPU: " + gpuTemp + " °C");
 
         try {
             sysTray.add(icon);
