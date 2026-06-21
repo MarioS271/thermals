@@ -1,7 +1,10 @@
 package net.marios271.thermals;
 
+import net.marios271.thermals.tray.TrayManager;
+
 public class Thermals {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        TrayManager trayMan = new TrayManager();
+        trayMan.start();
     }
 }
