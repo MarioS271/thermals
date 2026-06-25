@@ -8,8 +8,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class Window {
-    static JFrame frame = null;
-
     static WindowListener windowListener = new WindowListener() {
         @Override
         public void windowOpened(WindowEvent e) {}
@@ -37,6 +35,10 @@ public class Window {
         public void windowDeactivated(WindowEvent e) {}
     };
 
+    static JFrame frame = null;
+    static TopPanel topPanel = null;
+    static BottomPanel bottomPanel = null;
+
     public static void init() {
         FlatDarkLaf.setup();
 
@@ -45,15 +47,20 @@ public class Window {
 
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Thermals");
-            frame.setSize(600, 350);
+            frame.setSize(1000, 600);
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             frame.addWindowListener(windowListener);
 
-            JPanel panel = new JPanel(new GridBagLayout());
-            panel.add(new JLabel("Hello, World!"));
+            topPanel = new TopPanel(frame);
+            bottomPanel = new BottomPanel(frame);
 
-            frame.add(panel);
+            JSplitPane splitPlane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
+            splitPlane.setDividerLocation(frame.getHeight() / 3);
+            splitPlane.setDividerSize(0);
+            splitPlane.setEnabled(false);
+
+            frame.add(splitPlane);
             frame.setVisible(true);
         });
     }
