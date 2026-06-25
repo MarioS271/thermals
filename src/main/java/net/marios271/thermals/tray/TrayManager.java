@@ -12,6 +12,8 @@ public class TrayManager {
         @Override
         public void mouseClicked(MouseEvent e) {
             Window.init();
+            if (e.getButton() == MouseEvent.BUTTON1)
+                Window.init();
         }
 
         @Override
@@ -37,21 +39,37 @@ public class TrayManager {
         Dimension sysTrayDims = sysTray.getTrayIconSize();
 
         // placeholder temps for now
-        int cpuTemp = 50;
-        int gpuTemp = 50;
+        double cpuTemp = 50;
+        double gpuTemp = 40;
 
         BufferedImage img = new TrayIconDrawer().draw(cpuTemp, sysTrayDims);
+
+        PopupMenu menu = buildMenu();
 
         TrayIcon icon = new TrayIcon(img);
         icon.setImageAutoSize(false);
         icon.setToolTip("Thermals\n\nCPU: " + cpuTemp + " °C\nGPU: " + gpuTemp + " °C");
-
         icon.addMouseListener(mouseListener);
+        icon.setPopupMenu(menu);
 
         try {
             sysTray.add(icon);
         } catch (AWTException e) {
             System.err.println("Exception while adding icon to tray: " + e);
         }
+    }
+
+    PopupMenu buildMenu() {
+        MenuItem openWindow = new MenuItem("Open Popup Window");
+        openWindow.addActionListener(e -> Window.init());
+
+        MenuItem exit = new MenuItem("Exit");
+        exit.addActionListener(e -> System.exit(0));
+
+        PopupMenu menu = new PopupMenu();
+        menu.add(openWindow);
+        menu.add(exit);
+
+        return menu;
     }
 }
