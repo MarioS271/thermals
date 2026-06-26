@@ -42,6 +42,10 @@ public class Window {
 
     public static void init() {
         FlatDarkLaf.setup();
+        UIManager.put("ScrollBar.thumbArc", 999);
+        UIManager.put("ScrollBar.track", UICommons.WINDOW_BACKGROUND_COLOR);
+        UIManager.put("ScrollBar.hoverTrackColor", UICommons.WINDOW_BACKGROUND_COLOR);
+        UIManager.put("ScrollBar.thumbInsets", new Insets(0, 2, 0, 0));
 
         if (frame != null)
             return;
@@ -63,7 +67,11 @@ public class Window {
             splitPlane.setDividerSize(0);
             splitPlane.setEnabled(false);
 
-            frame.add(splitPlane);
+            JScrollPane main = new JScrollPane(splitPlane);
+            main.setBorder(null);
+            main.getVerticalScrollBar().setUnitIncrement(12);
+
+            frame.add(main);
             frame.setVisible(true);
         });
     }

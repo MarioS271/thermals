@@ -12,6 +12,7 @@ public class GpuPanel extends JPanelRounded {
         setPreferredSize(UICommons.BIG_PANEL_SIZE);
         setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         setBorderRadius(20);
+
         add(gpuLabel);
     }
 }

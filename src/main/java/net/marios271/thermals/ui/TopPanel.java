@@ -8,8 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TopPanel extends JPanel {
-    final int hPadding = 50;
-    final int vPadding = 10;
+    final int topPadding = 10;
+    final int bottomPadding = 0;
+    final int sidePadding = 50;
 
     JFrame frame;
 
@@ -26,8 +27,7 @@ public class TopPanel extends JPanel {
         gpuPanel = new GpuPanel();
         ramPanel = new RamPanel();
 
-        setPreferredSize(new Dimension(frame.getWidth(), 300));
-        setBorder(BorderFactory.createEmptyBorder(vPadding, hPadding, vPadding, hPadding));
+        setBorder(BorderFactory.createEmptyBorder(topPadding, sidePadding, bottomPadding, sidePadding));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
 
         add(cpuPanel);
