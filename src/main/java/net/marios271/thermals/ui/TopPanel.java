@@ -28,6 +28,7 @@ public class TopPanel extends JPanel {
 
         setPreferredSize(new Dimension(frame.getWidth(), 300));
         setBorder(BorderFactory.createEmptyBorder(vPadding, hPadding, vPadding, hPadding));
+        setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
 
         add(cpuPanel);
         add(gpuPanel);

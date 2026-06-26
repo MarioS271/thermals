@@ -1,5 +1,6 @@
 package net.marios271.thermals.ui;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.swing.*;
@@ -52,6 +53,7 @@ public class Window {
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             frame.addWindowListener(windowListener);
+            frame.getRootPane().putClientProperty(FlatClientProperties.TITLE_BAR_BACKGROUND, UICommons.WINDOW_BACKGROUND_COLOR);
 
             topPanel = new TopPanel(frame);
             bottomPanel = new BottomPanel(frame);
