@@ -6,7 +6,7 @@ import net.marios271.thermals.ui.UICommons;
 import javax.swing.*;
 
 public class CpuPanel extends JPanelRounded {
-    static JLabel cpuLabel = new JLabel("CPU");
+    JLabel cpuLabel = new JLabel("CPU");
 
     public CpuPanel() {
         setPreferredSize(UICommons.BIG_PANEL_SIZE);

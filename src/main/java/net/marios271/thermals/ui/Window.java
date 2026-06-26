@@ -47,7 +47,8 @@ public class Window {
 
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Thermals");
-            frame.setSize(1000, 600);
+            frame.setResizable(false);
+            frame.setSize(new Dimension(1100, 700));
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             frame.addWindowListener(windowListener);

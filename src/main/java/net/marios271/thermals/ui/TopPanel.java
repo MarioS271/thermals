@@ -8,13 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TopPanel extends JPanel {
-    static final int hPadding = 50;
-    static final int vPadding = 10;
+    final int hPadding = 50;
+    final int vPadding = 10;
 
-    static JFrame frame = null;
-    static CpuPanel cpuPanel = null;
-    static GpuPanel gpuPanel = null;
-    static RamPanel ramPanel = null;
+    JFrame frame;
+
+    CpuPanel cpuPanel;
+    GpuPanel gpuPanel;
+    RamPanel ramPanel;
 
     public TopPanel(JFrame _frame) {
         super(new FlowLayout(FlowLayout.CENTER, UICommons.PANEL_SPACING, UICommons.PANEL_SPACING));

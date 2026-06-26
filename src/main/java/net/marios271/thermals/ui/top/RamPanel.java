@@ -6,7 +6,7 @@ import net.marios271.thermals.ui.UICommons;
 import javax.swing.*;
 
 public class RamPanel extends JPanelRounded {
-    static JLabel ramLabel = new JLabel("RAM");
+    JLabel ramLabel = new JLabel("RAM");
 
     public RamPanel() {
         setPreferredSize(UICommons.BIG_PANEL_SIZE);

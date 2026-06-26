@@ -6,7 +6,7 @@ import net.marios271.thermals.ui.UICommons;
 import javax.swing.*;
 
 public class GpuPanel extends JPanelRounded {
-    static JLabel gpuLabel = new JLabel("GPU");
+    JLabel gpuLabel = new JLabel("GPU");
 
     public GpuPanel() {
         setPreferredSize(UICommons.BIG_PANEL_SIZE);

@@ -4,10 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BottomPanel extends JPanel {
-    static final int hPadding = 80;
-    static final int vPadding = 30;
+    final int hPadding = 80;
+    final int vPadding = 30;
 
-    static JFrame frame = null;
+    JFrame frame;
 
     public BottomPanel(JFrame _frame) {
         super(new GridLayout(1, 4, 10, 10));
