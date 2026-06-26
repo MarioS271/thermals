@@ -11,7 +11,6 @@ public class TrayManager {
     static MouseListener mouseListener = new MouseListener() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            Window.init();
             if (e.getButton() == MouseEvent.BUTTON1)
                 Window.init();
         }
