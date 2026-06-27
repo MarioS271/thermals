@@ -1,8 +1,6 @@
-package net.marios271.thermals.ui;
+package net.marios271.thermals.ui.top;
 
-import net.marios271.thermals.ui.top.CpuPanel;
-import net.marios271.thermals.ui.top.GpuPanel;
-import net.marios271.thermals.ui.top.RamPanel;
+import net.marios271.thermals.ui.UICommons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +25,12 @@ public class TopPanel extends JPanel {
         gpuPanel = new GpuPanel();
         ramPanel = new RamPanel();
 
-        setBorder(BorderFactory.createEmptyBorder(topPadding, sidePadding, bottomPadding, sidePadding));
+        setBorder(UICommons.fourAxisPadding(
+            topPadding,
+            sidePadding,
+            bottomPadding,
+            sidePadding
+        ));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
 
         add(cpuPanel);

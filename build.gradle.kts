@@ -15,6 +15,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     implementation("com.formdev:flatlaf:3.4.1")
+    implementation("org.jfree:jfreechart:1.5.4")
 }
 
 tasks.test {

@@ -1,7 +1,7 @@
-package net.marios271.thermals.ui;
+package net.marios271.thermals.ui.bottom;
 
-import net.marios271.thermals.ui.bottom.DiskPanel;
-import net.marios271.thermals.ui.bottom.NetworkPanel;
+import net.marios271.thermals.ui.UICommons;
+import net.marios271.thermals.ui.components.WrapLayout;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -34,7 +34,12 @@ public class BottomPanel extends JPanel {
         netPanels.add(new NetworkPanel(3));
         netPanels.add(new NetworkPanel(4));
 
-        setBorder(BorderFactory.createEmptyBorder(topPadding, sidePadding, bottomPadding, sidePadding));
+        setBorder(UICommons.fourAxisPadding(
+            topPadding,
+            sidePadding,
+            bottomPadding,
+            sidePadding
+        ));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
 
         for (DiskPanel panel : diskPanels) {

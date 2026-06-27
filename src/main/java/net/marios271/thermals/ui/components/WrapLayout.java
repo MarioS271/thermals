@@ -1,4 +1,4 @@
-package net.marios271.thermals.ui;
+package net.marios271.thermals.ui.components;
 
 import java.awt.*;
 import javax.swing.JScrollPane;
