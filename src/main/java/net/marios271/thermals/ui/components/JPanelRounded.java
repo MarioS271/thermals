@@ -1,5 +1,7 @@
 package net.marios271.thermals.ui.components;
 
+import net.marios271.thermals.ui.UICommons;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -28,6 +30,8 @@ public class JPanelRounded extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(getBackground());
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), _borderRadius, _borderRadius);
+        g2d.setColor(UICommons.PANEL_BORDER_COLOR);
+        g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, _borderRadius, _borderRadius);
         g2d.dispose();
     }
 }

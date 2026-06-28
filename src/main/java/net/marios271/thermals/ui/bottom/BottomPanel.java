@@ -22,17 +22,9 @@ public class BottomPanel extends JPanel {
 
         diskPanels.add(new DiskPanel(1));
         diskPanels.add(new DiskPanel(2));
-        diskPanels.add(new DiskPanel(3));
-        diskPanels.add(new DiskPanel(4));
-        diskPanels.add(new DiskPanel(5));
-        diskPanels.add(new DiskPanel(6));
-        diskPanels.add(new DiskPanel(7));
-        diskPanels.add(new DiskPanel(8));
-        netPanels.add(new NetworkPanel(0));
         netPanels.add(new NetworkPanel(1));
         netPanels.add(new NetworkPanel(2));
         netPanels.add(new NetworkPanel(3));
-        netPanels.add(new NetworkPanel(4));
 
         setBorder(UICommons.fourAxisPadding(
             topPadding,

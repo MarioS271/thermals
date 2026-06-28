@@ -1,25 +1,26 @@
 package net.marios271.thermals.ui;
 
-import org.jfree.data.category.DefaultCategoryDataset;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
 public final class UICommons {
     // Statics
-    public static final Color WINDOW_BACKGROUND_COLOR = new Color(0x222224);
-    public static final Color PANEL_BACKGROUND_COLOR = new Color(0x404042);
-
-    public static final Color CHART_LABEL_COLOR = new Color(0xe0e0e0);
+    public static final Color WINDOW_BACKGROUND_COLOR = new Color(0x1a1a1c);
+    public static final Color PANEL_BACKGROUND_COLOR = new Color(0x2a2a2c);
+    public static final Color PANEL_BORDER_COLOR = new Color(0x363638);
 
     public static final int PANEL_SPACING = 15;
     public static final Dimension BIG_PANEL_SIZE = new Dimension(270, 166);
     public static final Dimension SMALL_PANEL_SIZE = new Dimension(210, 129);
 
-    public static final int PANEL_HPADDING = 20;
+    public static final int PANEL_HPADDING = 15;
     public static final int PANEL_VPADDING = 10;
     public static final int PANEL_MAIN_SECTION_PADDING = 4;
+    public static final int PANEL_STAT_SPACING = 30;
+
+    public static final int GRAPH_DATA_BACKLOG_SIZE = 50;
+    public static final float GRAPH_DATA_REFRESH_INTERVAL = 0.5f;
 
     // Helpers
     public static Border uniformPadding(int padding) {

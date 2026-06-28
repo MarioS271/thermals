@@ -1,4 +1,4 @@
-package net.marios271.thermals.ui.top;
+package net.marios271.thermals.ui.middle;
 
 import net.marios271.thermals.ui.components.JPanelRounded;
 import net.marios271.thermals.ui.UICommons;
