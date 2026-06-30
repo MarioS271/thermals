@@ -1,7 +1,6 @@
 package net.marios271.thermals.ui.top;
 
 import net.marios271.thermals.ui.UICommons;
-import net.marios271.thermals.ui.middle.GpuPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,15 +10,11 @@ public class TopPanel extends JPanel {
     final int bottomPadding = 0;
     final int sidePadding = 10;
 
-    JFrame frame;
-
     CpuPanel cpuPanel;
     RamPanel ramPanel;
 
-    public TopPanel(JFrame _frame) {
+    public TopPanel() {
         super(new GridBagLayout());
-
-        frame = _frame;
 
         cpuPanel = new CpuPanel();
         ramPanel = new RamPanel();
@@ -31,10 +26,13 @@ public class TopPanel extends JPanel {
             sidePadding
         ));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
+        int fixedHeight = UICommons.COMPONENT_PANEL_HEIGHT + topPadding + bottomPadding;
+        setPreferredSize(new Dimension(100, fixedHeight));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, fixedHeight));
 
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.weighty = 1.0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weighty = 0.0;
 
         constraints.gridx = 0;
         constraints.weightx = 2;

@@ -11,7 +11,7 @@ public class ComponentPanel extends JPanelRounded {
     public ComponentPanel(String _title) {
         super(new BorderLayout());
 
-        setPreferredSize(new Dimension(0, 0));
+        setPreferredSize(new Dimension(0, UICommons.COMPONENT_PANEL_HEIGHT));
         setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         setBorder(UICommons.twoAxisPadding(
             UICommons.PANEL_VPADDING,
@@ -20,7 +20,12 @@ public class ComponentPanel extends JPanelRounded {
         setBorderRadius(20);
 
         panelTitle = new JLabel(_title);
-
         add(panelTitle, BorderLayout.NORTH);
+    }
+
+    public void setAllSizes(Dimension size) {
+        setPreferredSize(size);
+        setMinimumSize(size);
+        setMaximumSize(size);
     }
 }

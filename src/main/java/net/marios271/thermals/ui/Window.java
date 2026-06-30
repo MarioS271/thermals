@@ -3,6 +3,7 @@ package net.marios271.thermals.ui;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
 import net.marios271.thermals.ui.bottom.BottomPanel;
+import net.marios271.thermals.ui.middle.MiddlePanel;
 import net.marios271.thermals.ui.top.TopPanel;
 
 import javax.swing.*;
@@ -40,6 +41,7 @@ public class Window {
 
     static JFrame frame = null;
     static TopPanel topPanel = null;
+    static MiddlePanel middlePanel = null;
     static BottomPanel bottomPanel = null;
 
     public static void init() {
@@ -55,25 +57,29 @@ public class Window {
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Thermals");
             frame.setResizable(false);
-            frame.setSize(new Dimension(1100, 700));
+            frame.setSize(new Dimension(1100, 850));
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             frame.addWindowListener(windowListener);
             frame.getRootPane().putClientProperty(FlatClientProperties.TITLE_BAR_BACKGROUND, UICommons.WINDOW_BACKGROUND_COLOR);
 
-            topPanel = new TopPanel(frame);
-            bottomPanel = new BottomPanel(frame);
+            topPanel = new TopPanel();
+            middlePanel = new MiddlePanel();
+            bottomPanel = new BottomPanel();
 
-            JSplitPane splitPlane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPanel);
-            splitPlane.setDividerLocation(frame.getHeight() / 3);
-            splitPlane.setDividerSize(0);
-            splitPlane.setEnabled(false);
+            JPanel main = new JPanel();
+            main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+            main.setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
+            main.add(topPanel);
+            main.add(middlePanel);
+            main.add(bottomPanel);
 
-            JScrollPane main = new JScrollPane(splitPlane);
-            main.setBorder(null);
-            main.getVerticalScrollBar().setUnitIncrement(12);
+            JScrollPane scroll = new JScrollPane(main);
+            scroll.getVerticalScrollBar().setUnitIncrement(12);
+            scroll.setBorder(null);
+            scroll.getViewport().setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
 
-            frame.add(main);
+            frame.add(scroll);
             frame.setVisible(true);
         });
     }

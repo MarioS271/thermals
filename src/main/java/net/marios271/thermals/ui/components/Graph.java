@@ -49,7 +49,9 @@ public class Graph extends ChartPanel {
         renderer.setDefaultPaint(_chartColor);
 
         super(chart);
+        setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         setMinimumSize(new Dimension(0, 0));
+        setBorder(null);
         setPopupMenu(null);
         setMouseZoomable(false);
     }

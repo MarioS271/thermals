@@ -11,8 +11,9 @@ public final class UICommons {
     public static final Color PANEL_BORDER_COLOR = new Color(0x363638);
 
     public static final int PANEL_SPACING = 15;
-    public static final Dimension BIG_PANEL_SIZE = new Dimension(270, 166);
-    public static final Dimension SMALL_PANEL_SIZE = new Dimension(210, 129);
+    public static final int PANEL_WIDTH = 400;
+    public static final int COMPONENT_PANEL_HEIGHT = 200;
+    public static final Dimension DEFAULT_PANEL_SIZE = new Dimension(PANEL_WIDTH, COMPONENT_PANEL_HEIGHT);
 
     public static final int PANEL_HPADDING = 15;
     public static final int PANEL_VPADDING = 10;

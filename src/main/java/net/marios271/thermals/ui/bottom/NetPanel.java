@@ -5,9 +5,9 @@ import net.marios271.thermals.ui.UICommons;
 
 import java.awt.*;
 
-public class DiskPanel extends ComponentPanel {
-    public DiskPanel() {
-        super("Disks");
+public class NetPanel extends ComponentPanel {
+    public NetPanel() {
+        super("Network Adapters");
 
         setMinimumSize(UICommons.DEFAULT_PANEL_SIZE);
     }
