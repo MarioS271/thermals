@@ -13,7 +13,7 @@ public class GpuPanel extends ComponentPanel {
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
     public GpuPanel() {
-        String gpuName = "NVIDA RTX 4050";
+        String gpuName = "NVIDIA RTX 4050";
         super("GPU  -  " + gpuName);
 
         setAllSizes(UICommons.DEFAULT_PANEL_SIZE);
