@@ -27,8 +27,8 @@ public class Disk extends BaseBottomEntry {
         _diskType = new JLabel(diskType);
         _usageText = new JLabel(usagePct + "%");
         _usageBar = new PercentageBar(60, 7, usagePct);
-        _download = new UpDownLabel(DOWN_ARROW, Color.BLUE, "MB/s", writeRate);
-        _upload = new UpDownLabel(UP_ARROW, Color.MAGENTA, "MB/s", readRate);
+        _download = new UpDownLabel(DOWN_ARROW, Color.PINK, "MB/s", writeRate);
+        _upload = new UpDownLabel(UP_ARROW, Color.YELLOW, "MB/s", readRate);
 
         details.add(_diskType);
         details.add(Box.createHorizontalStrut(GAP));

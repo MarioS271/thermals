@@ -15,7 +15,7 @@ public class BottomPanel extends JPanel {
 
     public BottomPanel() {
         super();
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setLayout(new GridBagLayout());
 
         diskPanel = new DiskPanel();
         netPanel = new NetPanel();
@@ -23,9 +23,21 @@ public class BottomPanel extends JPanel {
         setBorder(UICommons.fourAxisPadding(topPadding, sidePadding, bottomPadding, sidePadding));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
 
-        add(diskPanel);
-        add(Box.createHorizontalStrut(UICommons.PANEL_SPACING));
-        add(netPanel);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.weighty = 0;
+
+        gbc.gridx = 0;
+        gbc.weightx = 1.5;
+        gbc.insets = new Insets(0, 0, 0, UICommons.PANEL_SPACING);
+        add(diskPanel, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        add(netPanel, gbc);
     }
 
     @Override

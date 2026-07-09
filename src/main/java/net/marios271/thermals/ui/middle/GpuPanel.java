@@ -31,7 +31,7 @@ public class GpuPanel extends ComponentPanel {
         main.setBorder(UICommons.uniformPadding(UICommons.PANEL_MAIN_SECTION_PADDING));
         main.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         main.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-        main.add(new Graph(dataset, Color.MAGENTA));
+        main.add(new Graph(dataset, Color.GREEN));
         main.add(stats);
 
         add(main, BorderLayout.CENTER);
