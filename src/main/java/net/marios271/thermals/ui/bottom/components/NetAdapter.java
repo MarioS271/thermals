@@ -10,7 +10,6 @@ public class NetAdapter extends BaseBottomEntry {
     final char UP_ARROW = '↑';
     final char DOWN_ARROW = '↓';
 
-    JLabel _adapterType;
     UpDownLabel _download;
     UpDownLabel _upload;
     
