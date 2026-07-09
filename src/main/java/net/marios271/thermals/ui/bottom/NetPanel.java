@@ -21,8 +21,9 @@ public class NetPanel extends ComponentPanel {
         container.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         container.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-        adapters.add(new NetAdapter("Windows (C:)", 24, 8));
-        adapters.add(new NetAdapter("Daten (D:)", 167, 0));
+        adapters.add(new NetAdapter("WiFi", 24, 8));
+        adapters.add(new NetAdapter("Ethernet", 167, 0));
+        adapters.add(new NetAdapter("Tailscale", 0, 0));
 
         for (NetAdapter adapter : adapters) {
             container.add(adapter);
