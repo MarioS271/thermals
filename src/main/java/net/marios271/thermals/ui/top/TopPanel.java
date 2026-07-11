@@ -1,5 +1,6 @@
 package net.marios271.thermals.ui.top;
 
+import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.UICommons;
 
 import javax.swing.*;
@@ -10,13 +11,17 @@ public class TopPanel extends JPanel {
     final int bottomPadding = 0;
     final int sidePadding = 10;
 
+    HwManager _hwManager;
+
     CpuPanel cpuPanel;
     RamPanel ramPanel;
 
-    public TopPanel() {
+    public TopPanel(HwManager hwManager) {
         super(new GridBagLayout());
 
-        cpuPanel = new CpuPanel();
+        _hwManager = hwManager;
+
+        cpuPanel = new CpuPanel(_hwManager);
         ramPanel = new RamPanel();
 
         setBorder(UICommons.fourAxisPadding(

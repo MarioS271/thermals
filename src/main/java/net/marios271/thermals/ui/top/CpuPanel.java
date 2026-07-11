@@ -1,5 +1,6 @@
 package net.marios271.thermals.ui.top;
 
+import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.components.ComponentPanel;
 import net.marios271.thermals.ui.UICommons;
 import net.marios271.thermals.ui.components.Graph;
@@ -12,8 +13,12 @@ import java.awt.*;
 public class CpuPanel extends ComponentPanel {
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-    public CpuPanel() {
-        String cpuName = "Intel i7-13620H";
+    HwManager _hwManager;
+
+    public CpuPanel(HwManager hwManager) {
+        _hwManager = hwManager;
+
+        String cpuName = hwManager.cpu().getCpuName();
         super("CPU  -  " + cpuName);
 
         JPanel stats = new JPanel();

@@ -1,5 +1,6 @@
 package net.marios271.thermals.ui.bottom;
 
+import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.UICommons;
 
 import javax.swing.*;
@@ -10,12 +11,16 @@ public class BottomPanel extends JPanel {
     final int bottomPadding = 10;
     final int sidePadding = 10;
 
+    HwManager _hwManager;
+
     DiskPanel diskPanel;
     NetPanel netPanel;
 
-    public BottomPanel() {
+    public BottomPanel(HwManager hwManager) {
         super();
         setLayout(new GridBagLayout());
+
+        _hwManager = hwManager;
 
         diskPanel = new DiskPanel();
         netPanel = new NetPanel();

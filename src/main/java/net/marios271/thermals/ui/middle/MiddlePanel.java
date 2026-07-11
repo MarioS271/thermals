@@ -1,5 +1,6 @@
 package net.marios271.thermals.ui.middle;
 
+import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.UICommons;
 import net.marios271.thermals.ui.components.ComponentPanel;
 
@@ -12,10 +13,14 @@ public class MiddlePanel extends JPanel {
     final int bottomPadding = 0;
     final int sidePadding = 10;
 
+    HwManager _hwManager;
+
     ArrayList<ComponentPanel> panels = new ArrayList<>();
 
-    public MiddlePanel() {
+    public MiddlePanel(HwManager hwManager) {
         super(new BorderLayout());
+
+        _hwManager = hwManager;
 
         panels.add(new GpuPanel());
         panels.add(new FanPanel());

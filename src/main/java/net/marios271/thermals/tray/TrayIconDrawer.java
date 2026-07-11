@@ -11,7 +11,7 @@ public class TrayIconDrawer {
     final int coldTemp = 30;  // °C
     final int hotTemp = 90;  // °C
 
-    public BufferedImage draw(int tempCelsius, Dimension iconSize) {
+    public BufferedImage draw(double tempCelsius, Dimension iconSize) {
         BufferedImage img = new BufferedImage(iconSize.width, iconSize.height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = img.createGraphics();
 
@@ -25,7 +25,7 @@ public class TrayIconDrawer {
         return img;
     }
 
-    private Color generateColor(int temp) {
+    private Color generateColor(double temp) {
         float t = (float) (temp - coldTemp) / (hotTemp - coldTemp);
         float hue = coldHue + t * (hotHue - coldHue);
         return Color.getHSBColor(hue, 1f, 1f);

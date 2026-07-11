@@ -16,6 +16,7 @@ dependencies {
 
     implementation("com.formdev:flatlaf:3.4.1")
     implementation("org.jfree:jfreechart:1.5.4")
+    implementation("com.github.oshi:oshi-core:6.6.1")
 }
 
 tasks.test {

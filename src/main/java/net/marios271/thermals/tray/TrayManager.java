@@ -1,5 +1,6 @@
 package net.marios271.thermals.tray;
 
+import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.Window;
 
 import java.awt.*;
@@ -8,11 +9,13 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 public class TrayManager {
-    static MouseListener mouseListener = new MouseListener() {
+    HwManager hwManager;
+
+    MouseListener mouseListener = new MouseListener() {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1)
-                Window.init();
+                Window.init(hwManager);
         }
 
         @Override
@@ -28,11 +31,13 @@ public class TrayManager {
         public void mouseExited(MouseEvent e) {}
     };
 
-    public void start() {
+    public void start(HwManager _hwManager) {
         if (!SystemTray.isSupported()) {
             System.err.println("System does not support system tray, exiting");
             System.exit(1);
         }
+
+        hwManager = _hwManager;
 
         SystemTray sysTray = SystemTray.getSystemTray();
         Dimension sysTrayDims = sysTray.getTrayIconSize();
@@ -60,7 +65,7 @@ public class TrayManager {
 
     PopupMenu buildMenu() {
         MenuItem openWindow = new MenuItem("Open Popup Window");
-        openWindow.addActionListener(e -> Window.init());
+        openWindow.addActionListener(e -> Window.init(hwManager));
 
         MenuItem exit = new MenuItem("Exit");
         exit.addActionListener(e -> System.exit(0));

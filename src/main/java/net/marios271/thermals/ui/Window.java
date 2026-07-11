@@ -2,6 +2,7 @@ package net.marios271.thermals.ui;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
+import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.bottom.BottomPanel;
 import net.marios271.thermals.ui.middle.MiddlePanel;
 import net.marios271.thermals.ui.top.TopPanel;
@@ -44,7 +45,9 @@ public class Window {
     static MiddlePanel middlePanel = null;
     static BottomPanel bottomPanel = null;
 
-    public static void init() {
+    static HwManager _hwManager;
+
+    public static void init(HwManager hwManager) {
         FlatDarkLaf.setup();
         UIManager.put("ScrollBar.thumbArc", 999);
         UIManager.put("ScrollBar.track", UICommons.WINDOW_BACKGROUND_COLOR);
@@ -53,6 +56,8 @@ public class Window {
 
         if (frame != null)
             return;
+
+        _hwManager = hwManager;
 
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Thermals");
@@ -63,9 +68,9 @@ public class Window {
             frame.addWindowListener(windowListener);
             frame.getRootPane().putClientProperty(FlatClientProperties.TITLE_BAR_BACKGROUND, UICommons.WINDOW_BACKGROUND_COLOR);
 
-            topPanel = new TopPanel();
-            middlePanel = new MiddlePanel();
-            bottomPanel = new BottomPanel();
+            topPanel = new TopPanel(_hwManager);
+            middlePanel = new MiddlePanel(_hwManager);
+            bottomPanel = new BottomPanel(_hwManager);
 
             JPanel main = new JPanel();
             main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
