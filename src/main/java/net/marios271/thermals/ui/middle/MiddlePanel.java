@@ -56,4 +56,8 @@ public class MiddlePanel extends JPanel {
 
         add(scroll, BorderLayout.CENTER);
     }
+
+    public void update() {
+
+    }
 }

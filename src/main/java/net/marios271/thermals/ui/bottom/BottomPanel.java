@@ -45,6 +45,10 @@ public class BottomPanel extends JPanel {
         add(netPanel, gbc);
     }
 
+    public void update() {
+
+    }
+
     @Override
     public Dimension getMaximumSize() {
         return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);

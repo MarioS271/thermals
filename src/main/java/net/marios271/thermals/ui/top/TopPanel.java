@@ -48,4 +48,8 @@ public class TopPanel extends JPanel {
         constraints.insets = new Insets(0, UICommons.PANEL_SPACING, 0, 0);
         add(ramPanel, constraints);
     }
+
+    public void update() {
+        cpuPanel.update();
+    }
 }

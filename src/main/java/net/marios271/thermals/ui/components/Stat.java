@@ -6,11 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Stat extends JPanel {
+    JLabel valueLabel;
+
     public Stat(String _value, String _valueSuffix, String _statName) {
         super(new GridBagLayout());
         setBackground(UICommons.PANEL_BACKGROUND_COLOR);
 
-        JLabel valueLabel = new JLabel(_value);
+        valueLabel = new JLabel(_value);
         valueLabel.setFont(valueLabel.getFont().deriveFont(Font.BOLD, 28f));
 
         JLabel suffixLabel = new JLabel(_valueSuffix);
@@ -37,5 +39,9 @@ public class Stat extends JPanel {
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0, 0, 0, 0);
         add(nameLabel, c);
+    }
+
+    public void setValue(String _value) {
+        valueLabel.setText(_value);
     }
 }

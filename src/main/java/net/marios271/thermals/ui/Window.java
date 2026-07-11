@@ -87,5 +87,11 @@ public class Window {
             frame.add(scroll);
             frame.setVisible(true);
         });
+
+        new Timer(500, e -> {
+            topPanel.update();
+            middlePanel.update();
+            bottomPanel.update();
+        }).start();
     }
 }
