@@ -9,6 +9,7 @@ public final class UICommons {
     public static final Color WINDOW_BACKGROUND_COLOR = new Color(0x1a1a1c);
     public static final Color PANEL_BACKGROUND_COLOR = new Color(0x2a2a2c);
     public static final Color PANEL_BORDER_COLOR = new Color(0x363638);
+    public static final Color GRAPH_GRID_LINE_COLOR = new Color(0x565658);
 
     public static final int PANEL_SPACING = 15;
     public static final int PANEL_WIDTH = 400;

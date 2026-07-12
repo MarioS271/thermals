@@ -28,7 +28,7 @@ public class CpuPanel extends ComponentPanel {
         super("CPU  -  " + cpuName);
 
         usageStat = new Stat(Integer.toString(_hwManager.cpu().getCpuUsagePct()), "%", "Usage");
-        coresUsageStat = new Stat("3.8", "/8", "Cores used");
+        coresUsageStat = new Stat(Integer.toString(_hwManager.cpu().getCpuCoreUsagePct()), "/8", "Cores used");
         threadsStat = new Stat("8", "/10", "Threads");
         tempStat = new Stat("50", "°C", "Temp");
 

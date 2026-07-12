@@ -35,11 +35,11 @@ public class Graph extends ChartPanel {
 
         plot.setBackgroundPaint(UICommons.PANEL_BACKGROUND_COLOR);
         plot.setOutlineVisible(false);
-        plot.setRangeGridlinesVisible(false);
+        plot.setRangeGridlinePaint(UICommons.GRAPH_GRID_LINE_COLOR);
         plot.setDomainGridlinesVisible(false);
 
         rangeAxis.setRange(0.0, 100.0);
-        rangeAxis.setVisible(false);
+        rangeAxis.setAxisLinePaint(UICommons.PANEL_BACKGROUND_COLOR);
         domainAxis.setVisible(false);
 
         LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
