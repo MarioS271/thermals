@@ -13,6 +13,7 @@ The tray icon changes color in real time based on your CPU temperature (green wh
 - CPU usage, frequency, temperature, and core stats
 - GPU, RAM, disk, and network monitoring panels
 - Dark theme with rounded cards
+- Overflow error if you run the app for a few years :)
 
 ---
 
@@ -73,6 +74,7 @@ The app starts minimized to the system tray. Left-click the icon to open the sta
 ## AI Usage Disclaimer
 
 I used AI as a mentor for working through UI layout decisions and architecture questions. All code was written by me.
+I also used it for writing docs, such as parts of this README you're reading right now.
 
 ---
 

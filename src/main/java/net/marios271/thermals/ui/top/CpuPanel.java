@@ -12,6 +12,7 @@ import java.awt.*;
 
 public class CpuPanel extends ComponentPanel {
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    int datasetCurrentCol = 0;
 
     HwManager _hwManager;
 
@@ -49,13 +50,19 @@ public class CpuPanel extends ComponentPanel {
         main.add(stats);
 
         add(main, BorderLayout.CENTER);
-
-        for (int i = 0; i < 50; ++i) {
-            dataset.addValue(Math.random() * 100, "cpu", String.valueOf(i));
-        }
     }
 
     public void update() {
-        usageStat.setValue(Integer.toString(_hwManager.cpu().getCpuUsagePct()));
+        final int usagePct = _hwManager.cpu().getCpuUsagePct();
+
+        if (datasetCurrentCol >= UICommons.MAX_GRAPH_DATASET_SIZE)
+            dataset.removeColumn(0);
+
+        ++datasetCurrentCol;
+
+        dataset.addValue((Number)usagePct, "cpu", datasetCurrentCol);
+
+        usageStat.setValue(Integer.toString(usagePct));
+        coresUsageStat.setValue(Integer.toString(_hwManager.cpu().getCpuCoreUsagePct()));
     }
 }

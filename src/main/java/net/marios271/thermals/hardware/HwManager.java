@@ -1,5 +1,6 @@
 package net.marios271.thermals.hardware;
 
+import net.marios271.thermals.Thermals;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.Sensors;
@@ -24,7 +25,7 @@ public class HwManager {
             while (true) {
                 pollValues();
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(Thermals.DATA_UPDATE_INTERVAL_MS);
                 } catch (InterruptedException _) {}
             }
         });

@@ -8,6 +8,7 @@ public class Cpu {
 
     String processorName;
     volatile int usagePct;
+    volatile int coreUsagePct;
 
     long[] prevUsageTicks;
 
@@ -16,7 +17,6 @@ public class Cpu {
         cpu = manager.hal().getProcessor();
 
         processorName = cpu.getProcessorIdentifier().getName();
-
         prevUsageTicks = cpu.getSystemCpuLoadTicks();
 
         return this;
@@ -24,6 +24,7 @@ public class Cpu {
 
     public void pollValues() {
         usagePct = (int)(cpu.getSystemCpuLoadBetweenTicks(prevUsageTicks) * 100);
+        coreUsagePct = 0;
 
         prevUsageTicks = cpu.getSystemCpuLoadTicks();
     }
@@ -31,8 +32,10 @@ public class Cpu {
     public String getCpuName() {
         return processorName;
     }
-
     public int getCpuUsagePct() {
         return usagePct;
+    }
+    public int getCpuCoreUsagePct() {
+        return coreUsagePct;
     }
 }

@@ -20,8 +20,7 @@ public final class UICommons {
     public static final int PANEL_MAIN_SECTION_PADDING = 4;
     public static final int PANEL_STAT_SPACING = 30;
 
-    public static final int GRAPH_DATA_BACKLOG_SIZE = 50;
-    public static final float GRAPH_DATA_REFRESH_INTERVAL = 0.5f;
+    public static final int MAX_GRAPH_DATASET_SIZE = 50;
 
     // Helpers
     public static Border uniformPadding(int padding) {

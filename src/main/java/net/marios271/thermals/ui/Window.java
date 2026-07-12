@@ -2,6 +2,7 @@ package net.marios271.thermals.ui;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
+import net.marios271.thermals.Thermals;
 import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.bottom.BottomPanel;
 import net.marios271.thermals.ui.middle.MiddlePanel;
@@ -88,7 +89,7 @@ public class Window {
             frame.setVisible(true);
         });
 
-        new Timer(500, e -> {
+        new Timer(Thermals.DATA_UPDATE_INTERVAL_MS, e -> {
             topPanel.update();
             middlePanel.update();
             bottomPanel.update();
