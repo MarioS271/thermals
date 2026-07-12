@@ -1,5 +1,6 @@
 package net.marios271.thermals.hardware;
 
+import net.marios271.thermals.Helpers;
 import oshi.hardware.CentralProcessor;
 
 public class Cpu {
@@ -7,8 +8,11 @@ public class Cpu {
     CentralProcessor cpu;
 
     String processorName;
+    int logicalCores;
+
     volatile int usagePct;
-    volatile int coreUsagePct;
+    volatile double coreUsage;
+    volatile double clockSpeedGhz;
 
     long[] prevUsageTicks;
 
@@ -17,14 +21,18 @@ public class Cpu {
         cpu = manager.hal().getProcessor();
 
         processorName = cpu.getProcessorIdentifier().getName();
+        logicalCores = cpu.getLogicalProcessorCount();
+
         prevUsageTicks = cpu.getSystemCpuLoadTicks();
 
         return this;
     }
 
     public void pollValues() {
-        usagePct = (int)(cpu.getSystemCpuLoadBetweenTicks(prevUsageTicks) * 100);
-        coreUsagePct = 0;
+        double loadFraction = cpu.getSystemCpuLoadBetweenTicks(prevUsageTicks);
+        usagePct = (int)(loadFraction * 100);
+        coreUsage = loadFraction * logicalCores;
+        clockSpeedGhz = Helpers.getAvgOfLongArray(cpu.getCurrentFreq()) / 1_000_000_000.0;
 
         prevUsageTicks = cpu.getSystemCpuLoadTicks();
     }
@@ -32,10 +40,13 @@ public class Cpu {
     public String getCpuName() {
         return processorName;
     }
+    public int getLogicalCores() { return logicalCores; }
+
     public int getCpuUsagePct() {
         return usagePct;
     }
-    public int getCpuCoreUsagePct() {
-        return coreUsagePct;
+    public double getCpuCoreUsage() {
+        return coreUsage;
     }
+    public double getClockSpeedGhz() { return clockSpeedGhz; }
 }
