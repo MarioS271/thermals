@@ -19,23 +19,23 @@ The tray icon changes color in real time based on your CPU temperature (green wh
 
 ## Tech Stack
 
-| Library                                         | Purpose                |
+| Library/Tool                                    | Purpose                |
 |-------------------------------------------------|------------------------|
 | AWT and Swing                                   | Tray Icon and Popup UI |
 | [FlatLaf](https://www.formdev.com/flatlaf/)     | Dark look-and-feel     |
-| [OSHI](https://github.com/oshi/oshi)            | Hardware & sensor data |
 | [JFreeChart](https://www.jfree.org/jfreechart/) | Live history graphs    |
+| OSHI, PawnIO, NVAPI, nvidia-smi, hwmon, ...     | Hardware & sensor data |
 
 ---
 
 ## Data Sources
 
-| Component          | Windows                     | Linux                             |
-|--------------------|-----------------------------|-----------------------------------|
-| CPU temps          | OSHI / LibreHardwareMonitor | OSHI                              |
-| GPU temps (NVIDIA) | LibreHardwareMonitor        | `nvidia-smi`                      |
-| GPU temps (AMD)    | LibreHardwareMonitor        | sysfs hwmon (`/sys/class/hwmon/`) |
-| RAM, disk, network | OSHI                        | OSHI                              |
+| Component                     | Windows          | Linux                             |
+|-------------------------------|------------------|-----------------------------------|
+| CPU usage, RAM, disk, network | OSHI             | OSHI                              |
+| CPU temp & freq               | PawnIO           | OSHI                              |
+| GPU data (NVIDIA)             | NVAPI & D3DKMTHK | `nvidia-smi`                      |
+| GPU data (AMD)                | D3DKMTHK         | sysfs hwmon (`/sys/class/hwmon/`) |
 
 ---
 
@@ -75,6 +75,8 @@ The app starts minimized to the system tray. Left-click the icon to open the sta
 
 I used AI as a mentor for working through UI layout decisions and architecture questions. All code was written by me.
 I also used it for writing docs, such as parts of this README you're reading right now.
+Additionally, I used it for assisting with research on the topic of reading sensor data on Windows, cause microsoft
+makes it sooooo easy and definitely provides a standardized model for accessing hardware metrics :)))))
 
 ---
 
