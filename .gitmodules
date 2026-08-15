@@ -1,0 +1,3 @@
+[submodule "pawnio-reader/lib/nvapi"]
+	path = pawnio-reader/lib/nvapi
+	url = https://github.com/NVIDIA/nvapi.git
