@@ -27,7 +27,7 @@ public class Graph extends ChartPanel {
             false
         );
         chart.setBackgroundPaint(UICommons.PANEL_BACKGROUND_COLOR);
-        chart.setPadding(new RectangleInsets(0, 0, 0, 0));
+        chart.setPadding(new RectangleInsets(10, 0, 0, 0));
 
         CategoryPlot plot = chart.getCategoryPlot();
         ValueAxis rangeAxis = plot.getRangeAxis();
