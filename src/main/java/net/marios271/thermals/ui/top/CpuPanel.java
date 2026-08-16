@@ -45,7 +45,7 @@ public class CpuPanel extends ComponentPanel {
             "Clock Speed"
         );
         tempStat = new Stat(
-            "50",
+            Helpers.doubleAsSinglePrecisionString(hwManager.cpu().getTempC()),
             "°C",
             "Temperature"
         );
