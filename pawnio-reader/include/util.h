@@ -14,4 +14,3 @@ namespace fs = std::filesystem;
 
 std::vector<uint8_t> load_file(const fs::path& path);
 fs::path exe_dir();
-std::string json_str(const std::wstring& ws);
