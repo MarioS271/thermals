@@ -1,9 +1,15 @@
 package net.marios271.thermals.hardware;
 
+import net.marios271.thermals.Platform;
 import net.marios271.thermals.Thermals;
+import net.marios271.thermals.hardware.windows_reader.SensorData;
+import net.marios271.thermals.hardware.windows_reader.WindowsReader;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.Sensors;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HwManager {
     SystemInfo sysinfo;
@@ -11,19 +17,33 @@ public class HwManager {
     Sensors sensors;
 
     Cpu cpu;
+    ArrayList<Gpu> gpus = new ArrayList<>();
 
     Thread pollingThread;
+
+    final List<HwUpdateListener> listeners = new ArrayList<>();
 
     public void init() {
         sysinfo = new SystemInfo();
         hal = sysinfo.getHardware();
         sensors = hal.getSensors();
 
+        int numGpus = 0;
+        SensorData readerData = null;
+        if (Platform.isWindows()) {
+            readerData = WindowsReader.requestData();
+            if (readerData != null)
+                numGpus = readerData.gpus().size();
+        }
+
         cpu = new Cpu().init(this);
+        for (int i = 0; i < numGpus; ++i) {
+            gpus.add(new Gpu().init(this, readerData, i));
+        }
 
         pollingThread = new Thread(() -> {
             while (true) {
-                pollValues();
+                update();
                 try {
                     Thread.sleep(Thermals.DATA_UPDATE_INTERVAL_MS);
                 } catch (InterruptedException _) {}
@@ -33,8 +53,21 @@ public class HwManager {
         pollingThread.start();
     }
 
-    public void pollValues() {
-        cpu.pollValues();
+    public void update() {
+        SensorData readerData = null;
+        if (Platform.isWindows())
+            readerData = WindowsReader.requestData();
+
+        cpu.update(readerData);
+        for (Gpu gpu : gpus)
+            gpu.update(readerData);
+
+        listeners.forEach(HwUpdateListener::onHwUpdate);
+    }
+
+    public void addUpdateListener(HwUpdateListener listener) {
+        listeners.add(listener);
+        System.out.println("added update listener: " + listener);
     }
 
     public SystemInfo sysinfo() {
@@ -46,5 +79,9 @@ public class HwManager {
 
     public Cpu cpu() {
         return cpu;
+    }
+
+    public ArrayList<Gpu> gpus() {
+        return gpus;
     }
 }

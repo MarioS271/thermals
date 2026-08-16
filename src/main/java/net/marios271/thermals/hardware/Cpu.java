@@ -1,6 +1,8 @@
 package net.marios271.thermals.hardware;
 
 import net.marios271.thermals.Helpers;
+import net.marios271.thermals.Platform;
+import net.marios271.thermals.hardware.windows_reader.SensorData;
 import oshi.hardware.CentralProcessor;
 
 public class Cpu {
@@ -13,6 +15,7 @@ public class Cpu {
     volatile int usagePct;
     volatile double coreUsage;
     volatile double clockSpeedGhz;
+    volatile double tempC;
 
     long[] prevUsageTicks;
 
@@ -28,11 +31,14 @@ public class Cpu {
         return this;
     }
 
-    public void pollValues() {
+    public void update(SensorData readerData) {
         double loadFraction = cpu.getSystemCpuLoadBetweenTicks(prevUsageTicks);
         usagePct = (int)(loadFraction * 100);
         coreUsage = loadFraction * logicalCores;
         clockSpeedGhz = Helpers.getAvgOfLongArray(cpu.getCurrentFreq()) / 1_000_000_000.0;
+        if (Platform.isWindows() && readerData != null) {
+            tempC = readerData.cpuTempC();
+        }
 
         prevUsageTicks = cpu.getSystemCpuLoadTicks();
     }
@@ -40,7 +46,9 @@ public class Cpu {
     public String getCpuName() {
         return processorName;
     }
-    public int getLogicalCores() { return logicalCores; }
+    public int getLogicalCores() {
+        return logicalCores;
+    }
 
     public int getCpuUsagePct() {
         return usagePct;
@@ -48,5 +56,10 @@ public class Cpu {
     public double getCpuCoreUsage() {
         return coreUsage;
     }
-    public double getClockSpeedGhz() { return clockSpeedGhz; }
+    public double getClockSpeedGhz() {
+        return clockSpeedGhz;
+    }
+    public double getTempC() {
+        return tempC;
+    }
 }

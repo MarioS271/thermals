@@ -1,6 +1,8 @@
 package net.marios271.thermals.tray;
 
+import net.marios271.thermals.hardware.Gpu;
 import net.marios271.thermals.hardware.HwManager;
+import net.marios271.thermals.hardware.HwUpdateListener;
 import net.marios271.thermals.ui.Window;
 
 import java.awt.*;
@@ -8,8 +10,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
-public class TrayManager {
+public class TrayManager implements HwUpdateListener {
     HwManager hwManager;
+
+    SystemTray sysTray;
+    TrayIcon icon;
 
     MouseListener mouseListener = new MouseListener() {
         @Override
@@ -38,29 +43,21 @@ public class TrayManager {
         }
 
         hwManager = _hwManager;
+        sysTray = SystemTray.getSystemTray();
 
-        SystemTray sysTray = SystemTray.getSystemTray();
-        Dimension sysTrayDims = sysTray.getTrayIconSize();
-
-        // placeholder temps for now
-        double cpuTemp = 50;
-        double gpuTemp = 40;
-
-        BufferedImage img = new TrayIconDrawer().draw(cpuTemp, sysTrayDims);
-
-        PopupMenu menu = buildMenu();
-
-        TrayIcon icon = new TrayIcon(img);
+        BufferedImage img = new TrayIconDrawer().draw(-1, sysTray.getTrayIconSize());
+        icon = new TrayIcon(img);
         icon.setImageAutoSize(false);
-        icon.setToolTip("Thermals\n\nCPU: " + cpuTemp + " °C\nGPU: " + gpuTemp + " °C");
         icon.addMouseListener(mouseListener);
-        icon.setPopupMenu(menu);
+        icon.setPopupMenu(buildMenu());
 
         try {
             sysTray.add(icon);
         } catch (AWTException e) {
             System.err.println("Exception while adding icon to tray: " + e);
         }
+
+        hwManager.addUpdateListener(this);
     }
 
     PopupMenu buildMenu() {
@@ -75,5 +72,16 @@ public class TrayManager {
         menu.add(exit);
 
         return menu;
+    }
+
+    @Override
+    public void onHwUpdate() {
+        double cpuTemp = hwManager.cpu().getTempC();
+        double total = 0; int count = 0;
+        for (Gpu gpu : hwManager.gpus()) { total += gpu.getTempC(); count++; }
+        double gpuTemp = count > 0 ? total / count : 0;
+
+        icon.setImage(new TrayIconDrawer().draw(cpuTemp, sysTray.getTrayIconSize()));
+        icon.setToolTip("Thermals\n\nCPU: " + cpuTemp + " °C\nGPU: " + gpuTemp + " °C");
     }
 }

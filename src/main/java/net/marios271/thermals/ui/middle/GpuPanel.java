@@ -1,5 +1,8 @@
 package net.marios271.thermals.ui.middle;
 
+import net.marios271.thermals.Helpers;
+import net.marios271.thermals.hardware.Gpu;
+import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.UICommons;
 import net.marios271.thermals.ui.components.ComponentPanel;
 import net.marios271.thermals.ui.components.Graph;
@@ -11,20 +14,47 @@ import java.awt.*;
 
 public class GpuPanel extends ComponentPanel {
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    int datasetCurrentCol = 0;
 
-    public GpuPanel() {
-        String gpuName = "NVIDIA RTX 4050";
-        super("GPU  -  " + gpuName);
+    HwManager hwManager;
+    int gpuIndex;
 
+    Stat usageStat;
+    Stat tempStat;
+    Stat vramUsedStat;
+
+    public GpuPanel(HwManager _hwManager, int _gpuIndex) {
+        hwManager = _hwManager;
+        gpuIndex = _gpuIndex;
+
+        Gpu gpu = _hwManager.gpus().get(_gpuIndex);
+
+        super("GPU  -  " + gpu.getGpuName() + " (" + gpu.getVramTotalGbRounded() + " GB VRAM)");
         setAllSizes(UICommons.DEFAULT_PANEL_SIZE);
+
+        usageStat = new Stat(
+            Integer.toString((int)gpu.getUsagePct()),
+            "%",
+            "Usage"
+        );
+        tempStat = new Stat(
+            Helpers.doubleAsSinglePrecisionString(gpu.getTempC()),
+            "°C",
+            "Temp"
+        );
+        vramUsedStat = new Stat(
+            Helpers.doubleAsSinglePrecisionString(gpu.getVramUsedGbOneTenth()),
+            "GB",
+            "VRAM used"
+        );
 
         JPanel stats = new JPanel();
         stats.setLayout(new FlowLayout(FlowLayout.CENTER, UICommons.PANEL_STAT_SPACING, 0));
         stats.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         stats.setMaximumSize(new Dimension(Integer.MAX_VALUE, stats.getPreferredSize().height));
-        stats.add(new Stat("72", "%", "Usage"));
-        stats.add(new Stat("69", "°C", "Temp"));
-        stats.add(new Stat("4.6", "GB", "VRAM used"));
+        stats.add(usageStat);
+        stats.add(tempStat);
+        stats.add(vramUsedStat);
 
         JPanel main = new JPanel();
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
@@ -35,9 +65,22 @@ public class GpuPanel extends ComponentPanel {
         main.add(stats);
 
         add(main, BorderLayout.CENTER);
+    }
 
-        for (int i = 0; i < 50; ++i) {
-            dataset.addValue(Math.random() * 100, "cpu", String.valueOf(i));
-        }
+    public void update() {
+        Gpu gpu = hwManager.gpus().get(gpuIndex);
+
+        final int usagePct = (int)gpu.getUsagePct();
+
+        if (datasetCurrentCol >= UICommons.MAX_GRAPH_DATASET_SIZE)
+            dataset.removeColumn(0);
+
+        ++datasetCurrentCol;
+
+        dataset.addValue((Number)usagePct, "gpu", datasetCurrentCol);
+
+        usageStat.setValue(Integer.toString(usagePct));
+        tempStat.setValue(Helpers.doubleAsSinglePrecisionString(gpu.getTempC()));
+        vramUsedStat.setValue(Helpers.doubleAsSinglePrecisionString(gpu.getVramUsedGbOneTenth()));
     }
 }

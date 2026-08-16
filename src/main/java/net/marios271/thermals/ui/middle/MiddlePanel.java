@@ -1,6 +1,8 @@
 package net.marios271.thermals.ui.middle;
 
+import net.marios271.thermals.Platform;
 import net.marios271.thermals.hardware.HwManager;
+import net.marios271.thermals.hardware.Gpu;
 import net.marios271.thermals.ui.UICommons;
 import net.marios271.thermals.ui.components.ComponentPanel;
 
@@ -13,17 +15,22 @@ public class MiddlePanel extends JPanel {
     final int bottomPadding = 0;
     final int sidePadding = 10;
 
-    HwManager _hwManager;
+    HwManager hwManager;
 
+    ArrayList<GpuPanel> gpuPanels = new ArrayList<>();
     ArrayList<ComponentPanel> panels = new ArrayList<>();
 
-    public MiddlePanel(HwManager hwManager) {
+    public MiddlePanel(HwManager _hwManager) {
         super(new BorderLayout());
 
-        _hwManager = hwManager;
+        hwManager = _hwManager;
 
-        panels.add(new GpuPanel());
-        panels.add(new FanPanel());
+        for (Gpu gpu : hwManager.gpus()) {
+            gpuPanels.add(new GpuPanel(hwManager, gpu.getGpuIndex()));
+            panels.add(gpuPanels.get(gpu.getGpuIndex()));
+        }
+        if (!Platform.isWindows())
+            panels.add(new FanPanel());
 
         setBorder(UICommons.fourAxisPadding(topPadding, sidePadding, bottomPadding, sidePadding));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
@@ -58,6 +65,8 @@ public class MiddlePanel extends JPanel {
     }
 
     public void update() {
-
+        for (GpuPanel panel : gpuPanels) {
+            panel.update();
+        }
     }
 }

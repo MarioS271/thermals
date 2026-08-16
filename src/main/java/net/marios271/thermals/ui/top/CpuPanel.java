@@ -1,6 +1,7 @@
 package net.marios271.thermals.ui.top;
 
 import net.marios271.thermals.Helpers;
+import net.marios271.thermals.hardware.Cpu;
 import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.components.ComponentPanel;
 import net.marios271.thermals.ui.UICommons;
@@ -12,44 +13,36 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CpuPanel extends ComponentPanel {
-    final String DOUBLE_FORMAT = "%.1f";
-
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     int datasetCurrentCol = 0;
 
-    HwManager _hwManager;
+    HwManager hwManager;
 
     Stat usageStat;
     Stat coresUsageStat;
     Stat clockSpdStat;
-    Stat loadAvgStat;
     Stat tempStat;
 
-    public CpuPanel(HwManager hwManager) {
-        _hwManager = hwManager;
+    public CpuPanel(HwManager _hwManager) {
+        hwManager = _hwManager;
 
-        String cpuName = hwManager.cpu().getCpuName();
+        String cpuName = _hwManager.cpu().getCpuName();
         super("CPU  -  " + cpuName);
 
         usageStat = new Stat(
-            Integer.toString(_hwManager.cpu().getCpuUsagePct()),
+            Integer.toString(hwManager.cpu().getCpuUsagePct()),
             "%",
             "Usage"
         );
         coresUsageStat = new Stat(
-            Helpers.doubleAsSinglePrecisionString(_hwManager.cpu().getCpuCoreUsage()),
-            String.format("/%d", _hwManager.cpu().getLogicalCores()),
-            "Cores used"
+            Helpers.doubleAsSinglePrecisionString(hwManager.cpu().getCpuCoreUsage()),
+            String.format("/%d", hwManager.cpu().getLogicalCores()),
+            "Core Usage"
         );
         clockSpdStat = new Stat(
-            Helpers.doubleAsSinglePrecisionString(_hwManager.cpu().getClockSpeedGhz()),
+            Helpers.doubleAsSinglePrecisionString(hwManager.cpu().getClockSpeedGhz()),
             "GHz",
             "Clock Speed"
-        );
-        loadAvgStat = new Stat(
-            "0",
-            "%",
-            "Load Avg (1m)"
         );
         tempStat = new Stat(
             "50",
@@ -64,7 +57,6 @@ public class CpuPanel extends ComponentPanel {
         stats.add(usageStat);
         stats.add(coresUsageStat);
         stats.add(clockSpdStat);
-        stats.add(loadAvgStat);
         stats.add(tempStat);
 
         JPanel main = new JPanel();
@@ -79,7 +71,9 @@ public class CpuPanel extends ComponentPanel {
     }
 
     public void update() {
-        final int usagePct = _hwManager.cpu().getCpuUsagePct();
+        Cpu cpu = hwManager.cpu();
+
+        final int usagePct = cpu.getCpuUsagePct();
 
         if (datasetCurrentCol >= UICommons.MAX_GRAPH_DATASET_SIZE)
             dataset.removeColumn(0);
@@ -89,7 +83,8 @@ public class CpuPanel extends ComponentPanel {
         dataset.addValue((Number)usagePct, "cpu", datasetCurrentCol);
 
         usageStat.setValue(Integer.toString(usagePct));
-        coresUsageStat.setValue(Helpers.doubleAsSinglePrecisionString(_hwManager.cpu().getCpuCoreUsage()));
-        clockSpdStat.setValue(Helpers.doubleAsSinglePrecisionString(_hwManager.cpu().getClockSpeedGhz()));
+        coresUsageStat.setValue(Helpers.doubleAsSinglePrecisionString(cpu.getCpuCoreUsage()));
+        clockSpdStat.setValue(Helpers.doubleAsSinglePrecisionString(cpu.getClockSpeedGhz()));
+        tempStat.setValue(Helpers.doubleAsSinglePrecisionString(cpu.getTempC()));
     }
 }
