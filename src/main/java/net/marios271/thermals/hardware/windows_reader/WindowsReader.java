@@ -25,7 +25,6 @@ public class WindowsReader {
         try {
             Process proc = new ProcessBuilder(readerPath.toAbsolutePath().toString()).start();
             String stdout = new String(proc.getInputStream().readAllBytes());
-            System.out.println("pawnio_reader: " + stdout);
             proc.waitFor();
             return stdout;
         } catch (Exception e) {
