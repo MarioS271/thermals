@@ -1,3 +1,6 @@
 [submodule "pawnio-reader/lib/nvapi"]
 	path = pawnio-reader/lib/nvapi
 	url = https://github.com/NVIDIA/nvapi.git
+[submodule "pawnio-reader/lib/adlx"]
+	path = pawnio-reader/lib/adlx
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/ADLX.git

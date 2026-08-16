@@ -9,9 +9,23 @@ add_executable(pawnio_reader
     src/gpu.cpp
     src/json.cpp
     src/util.cpp
+    lib/adlx/SDK/Platform/Windows/WinAPIs.c
+    lib/adlx/SDK/ADLXHelper/Windows/Cpp/ADLXHelper.cpp
 )
 
-target_include_directories(pawnio_reader PRIVATE lib lib/nvapi include)
+target_include_directories(pawnio_reader PRIVATE
+    include
+    lib
+    lib/nvapi
+    lib/adlx/SDK/Include
+    lib/adlx/SDK/Platform/Windows
+    lib/adlx/SDK/ADLXHelper/Windows/Cpp
+)
+
+set_source_files_properties(
+    lib/adlx/SDK/Platform/Windows/WinAPIs.c
+    PROPERTIES LANGUAGE CXX
+)
 
 target_link_libraries(pawnio_reader PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/PawnIOLib.lib
