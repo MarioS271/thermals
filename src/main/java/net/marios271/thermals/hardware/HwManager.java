@@ -12,20 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HwManager {
-    SystemInfo sysinfo;
-    HardwareAbstractionLayer hal;
-    Sensors sensors;
+    private SystemInfo sysInfo;
+    private HardwareAbstractionLayer hal;
+    private Sensors sensors;
 
-    Cpu cpu;
-    ArrayList<Gpu> gpus = new ArrayList<>();
+    private Cpu cpu;
+    private Ram ram;
+    private ArrayList<Gpu> gpus = new ArrayList<>();
 
-    Thread pollingThread;
+    private Thread pollingThread;
 
-    final List<HwUpdateListener> listeners = new ArrayList<>();
+    private final List<HwUpdateListener> listeners = new ArrayList<>();
 
     public void init() {
-        sysinfo = new SystemInfo();
-        hal = sysinfo.getHardware();
+        sysInfo = new SystemInfo();
+        hal = sysInfo.getHardware();
         sensors = hal.getSensors();
 
         int numGpus = 0;
@@ -37,6 +38,7 @@ public class HwManager {
         }
 
         cpu = new Cpu().init(this);
+        ram = new Ram().init(this);
         for (int i = 0; i < numGpus; ++i) {
             gpus.add(new Gpu().init(this, readerData, i));
         }
@@ -59,6 +61,7 @@ public class HwManager {
             readerData = WindowsReader.requestData();
 
         cpu.update(readerData);
+        ram.update();
         for (Gpu gpu : gpus)
             gpu.update(readerData);
 
@@ -70,8 +73,8 @@ public class HwManager {
         System.out.println("added update listener: " + listener);
     }
 
-    public SystemInfo sysinfo() {
-        return sysinfo;
+    public SystemInfo sysInfo() {
+        return sysInfo;
     }
     public HardwareAbstractionLayer hal() {
         return hal;
@@ -80,7 +83,9 @@ public class HwManager {
     public Cpu cpu() {
         return cpu;
     }
-
+    public Ram ram() {
+        return ram;
+    }
     public ArrayList<Gpu> gpus() {
         return gpus;
     }

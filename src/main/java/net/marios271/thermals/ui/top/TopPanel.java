@@ -22,7 +22,7 @@ public class TopPanel extends JPanel {
         _hwManager = hwManager;
 
         cpuPanel = new CpuPanel(_hwManager);
-        ramPanel = new RamPanel();
+        ramPanel = new RamPanel(_hwManager);
 
         setBorder(UICommons.fourAxisPadding(
             topPadding,
@@ -51,5 +51,6 @@ public class TopPanel extends JPanel {
 
     public void update() {
         cpuPanel.update();
+        ramPanel.update();
     }
 }

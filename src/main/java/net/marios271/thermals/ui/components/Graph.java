@@ -16,6 +16,10 @@ import java.awt.*;
 
 public class Graph extends ChartPanel {
     public Graph(DefaultCategoryDataset _dataset, Color _chartColor) {
+        this(_dataset, _chartColor, 100.0);
+    }
+
+    public Graph(DefaultCategoryDataset _dataset, Color _chartColor, double rangeUpper) {
         JFreeChart chart = ChartFactory.createLineChart(
             null,
             null,
@@ -38,7 +42,7 @@ public class Graph extends ChartPanel {
         plot.setRangeGridlinePaint(UICommons.GRAPH_GRID_LINE_COLOR);
         plot.setDomainGridlinesVisible(false);
 
-        rangeAxis.setRange(0.0, 100.0);
+        rangeAxis.setRange(0.0, rangeUpper);
         rangeAxis.setAxisLinePaint(UICommons.PANEL_BACKGROUND_COLOR);
         domainAxis.setVisible(false);
 

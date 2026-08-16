@@ -6,18 +6,18 @@ import net.marios271.thermals.hardware.windows_reader.SensorData;
 import oshi.hardware.CentralProcessor;
 
 public class Cpu {
-    HwManager manager;
-    CentralProcessor cpu;
+    private HwManager manager;
+    private CentralProcessor cpu;
 
-    String processorName;
-    int logicalCores;
+    private String processorName;
+    private int logicalCores;
 
-    volatile int usagePct;
-    volatile double coreUsage;
-    volatile double clockSpeedGhz;
-    volatile double tempC;
+    private volatile int usagePct;
+    private volatile double coreUsage;
+    private volatile double clockSpeedGhz;
+    private volatile double tempC;
 
-    long[] prevUsageTicks;
+    private long[] prevUsageTicks;
 
     public Cpu init(HwManager _manager) {
         manager = _manager;

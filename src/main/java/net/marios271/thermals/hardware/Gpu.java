@@ -5,15 +5,15 @@ import net.marios271.thermals.hardware.windows_reader.GpuData;
 import net.marios271.thermals.hardware.windows_reader.SensorData;
 
 public class Gpu {
-    HwManager hwManager;
+    private HwManager hwManager;
 
-    String gpuName;
-    int gpuIndex;
+    private String gpuName;
+    private int gpuIndex;
 
-    volatile double tempC;
-    volatile double usagePct;
-    volatile long vramUsedMb;
-    volatile long vramTotalMb;
+    private volatile double tempC;
+    private volatile double usagePct;
+    private volatile long vramUsedMb;
+    private volatile long vramTotalMb;
 
     public Gpu init(HwManager _hwManager, SensorData readerData, int _gpuIndex) {
         hwManager = _hwManager;

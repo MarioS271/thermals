@@ -1,5 +1,9 @@
 package net.marios271.thermals.ui.top;
 
+import net.marios271.thermals.Helpers;
+import net.marios271.thermals.Platform;
+import net.marios271.thermals.hardware.HwManager;
+import net.marios271.thermals.hardware.Ram;
 import net.marios271.thermals.ui.UICommons;
 import net.marios271.thermals.ui.components.ComponentPanel;
 import net.marios271.thermals.ui.components.Graph;
@@ -11,31 +15,69 @@ import java.awt.*;
 
 public class RamPanel extends ComponentPanel {
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    int datasetCurrentCol = 0;
 
-    public RamPanel() {
-        String ramSpecs = "32GB DDR5-5200";
-        super("RAM  -  " + ramSpecs);
+    HwManager hwManager;
+
+    Stat usedStat;
+    Stat cachedStat;
+    Stat freeStat;
+
+    public RamPanel(HwManager _hwManager) {
+        hwManager = _hwManager;
+        Ram ram = _hwManager.ram();
+
+        super("RAM  -  " + ram.getCapacityGb() + "GB " + ram.getType() + "-" + ram.getSpeedMhz());
+
+        usedStat = new Stat(
+            Helpers.doubleAsSinglePrecisionString(ram.getUsedGb()),
+            "GB",
+            "Used"
+        );
+        cachedStat = new Stat(
+            Helpers.doubleAsSinglePrecisionString(ram.getCachedGb()),
+            "GB",
+            "Cached"
+        );
+        freeStat = new Stat(
+            Helpers.doubleAsSinglePrecisionString(ram.getFreeGb()),
+            "GB",
+            "Free"
+        );
 
         JPanel stats = new JPanel();
         stats.setLayout(new FlowLayout(FlowLayout.CENTER, UICommons.PANEL_STAT_SPACING, 0));
         stats.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         stats.setMaximumSize(new Dimension(Integer.MAX_VALUE, stats.getPreferredSize().height));
-        stats.add(new Stat("56", "%", "Usage"));
-        stats.add(new Stat("17", "GB", "Used"));
-        stats.add(new Stat("15", "GB", "Free"));
+        stats.add(usedStat);
+        if (!Platform.isWindows()) stats.add(cachedStat);
+        stats.add(freeStat);
 
         JPanel main = new JPanel();
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         main.setBorder(UICommons.uniformPadding(UICommons.PANEL_MAIN_SECTION_PADDING));
         main.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         main.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-        main.add(new Graph(dataset, Color.BLUE));
+        main.add(new Graph(dataset, Color.BLUE, ram.getCapacityGb()));
         main.add(stats);
 
         add(main, BorderLayout.CENTER);
+    }
 
-        for (int i = 0; i < 50; ++i) {
-            dataset.addValue(Math.random() * 100, "cpu", String.valueOf(i));
-        }
+    public void update() {
+        Ram ram = hwManager.ram();
+
+        final double usedGb = ram.getUsedGb();
+
+        if (datasetCurrentCol >= UICommons.MAX_GRAPH_DATASET_SIZE)
+            dataset.removeColumn(0);
+
+        ++datasetCurrentCol;
+
+        dataset.addValue((Number)usedGb, "ram", datasetCurrentCol);
+
+        usedStat.setValue(Helpers.doubleAsSinglePrecisionString(ram.getUsedGb()));
+        if (!Platform.isWindows()) cachedStat.setValue(Helpers.doubleAsSinglePrecisionString(ram.getCachedGb()));
+        freeStat.setValue(Helpers.doubleAsSinglePrecisionString(ram.getFreeGb()));
     }
 }
