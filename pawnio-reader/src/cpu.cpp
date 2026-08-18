@@ -31,8 +31,10 @@ static bool pawnio_read_msr(HANDLE h, ULONG64 msr, ULONG64& out) {
     const ULONG64 in_buf[1] = { msr };
     ULONG64 out_buf[1] = {};
     SIZE_T returned = 0;
+
     if (FAILED(pawnio_execute(h, "ioctl_read_msr", in_buf, 1, out_buf, 1, &returned)))
         return false;
+
     out = out_buf[0];
     return true;
 }
@@ -41,8 +43,10 @@ static bool pawnio_read_smn(HANDLE h, ULONG64 offset, ULONG64& out) {
     const ULONG64 in_buf[1] = { offset };
     ULONG64 out_buf[1] = {};
     SIZE_T returned = 0;
+
     if (FAILED(pawnio_execute(h, "ioctl_read_smn", in_buf, 1, out_buf, 1, &returned)))
         return false;
+
     out = out_buf[0];
     return true;
 }
@@ -70,8 +74,11 @@ static double read_amd_temp(HANDLE h, const fs::path& modules_dir) {
 
     double temp = -1;
     ULONG64 tctl_raw = 0;
-    if (pawnio_read_smn(h, SMN_THM_TCON_CUR_TMP, tctl_raw))
+    if (pawnio_read_smn(h, SMN_THM_TCON_CUR_TMP, tctl_raw)) {
         temp = ((tctl_raw >> 21) & 0x7FF) / 8.0;
+        if (tctl_raw & (1u << 19))
+            temp -= 49.0;
+    }
 
     if (pci_mutex) { ReleaseMutex(pci_mutex); CloseHandle(pci_mutex); }
     return temp;
@@ -82,8 +89,8 @@ double read_cpu_temp(const fs::path& modules_dir) {
     if (FAILED(pawnio_open(&h))) return -1;
 
     double temp = -1;
-    if (cpu_is_intel())     temp = read_intel_temp(h, modules_dir);
-    else if (cpu_is_amd())  temp = read_amd_temp(h, modules_dir);
+    if (cpu_is_intel()) temp = read_intel_temp(h, modules_dir);
+    else if (cpu_is_amd()) temp = read_amd_temp(h, modules_dir);
 
     pawnio_close(h);
     return temp;
