@@ -22,8 +22,8 @@ public class BottomPanel extends JPanel {
 
         _hwManager = hwManager;
 
-        diskPanel = new DiskPanel();
-        netPanel = new NetPanel();
+        diskPanel = new DiskPanel(hwManager);
+        netPanel = new NetPanel(hwManager);
 
         setBorder(UICommons.fourAxisPadding(topPadding, sidePadding, bottomPadding, sidePadding));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
@@ -46,7 +46,8 @@ public class BottomPanel extends JPanel {
     }
 
     public void update() {
-
+        diskPanel.update(_hwManager.disks());
+        netPanel.update(_hwManager.nets());
     }
 
     @Override

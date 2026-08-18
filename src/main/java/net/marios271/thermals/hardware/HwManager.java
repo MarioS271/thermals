@@ -6,7 +6,9 @@ import net.marios271.thermals.hardware.windows_reader.SensorData;
 import net.marios271.thermals.hardware.windows_reader.WindowsReader;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
+import oshi.hardware.NetworkIF;
 import oshi.hardware.Sensors;
+import oshi.software.os.OSFileStore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ public class HwManager {
     private Cpu cpu;
     private Ram ram;
     private ArrayList<Gpu> gpus = new ArrayList<>();
+    private ArrayList<Disk> disks = new ArrayList<>();
+    private ArrayList<Net> nets = new ArrayList<>();
 
     private Thread pollingThread;
 
@@ -37,8 +41,14 @@ public class HwManager {
 
         cpu = new Cpu().init(this);
         ram = new Ram().init(this);
-        for (int i = 0; i < numGpus; ++i) {
+        for (int i = 0; i < numGpus; ++i)
             gpus.add(new Gpu().init(this, readerData, i));
+        for (OSFileStore fileStore : sysInfo.getOperatingSystem().getFileSystem().getFileStores())
+            disks.add(new Disk().init(this, fileStore));
+        for (NetworkIF nif : hal.getNetworkIFs()) {
+            if (Net.isValid(nif)) {
+                nets.add(new Net().init(this, nif));
+            }
         }
 
         pollingThread = new Thread(() -> {
@@ -62,6 +72,10 @@ public class HwManager {
         ram.update();
         for (Gpu gpu : gpus)
             gpu.update(readerData);
+        for (Disk disk : disks)
+            disk.update();
+        for (Net net : nets)
+            net.update();
 
         listeners.forEach(HwUpdateListener::onHwUpdate);
     }
@@ -86,5 +100,11 @@ public class HwManager {
     }
     public ArrayList<Gpu> gpus() {
         return gpus;
+    }
+    public ArrayList<Disk> disks() {
+        return disks;
+    }
+    public ArrayList<Net> nets() {
+        return nets;
     }
 }

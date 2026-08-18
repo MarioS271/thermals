@@ -1,17 +1,20 @@
 package net.marios271.thermals.ui.bottom;
 
+import net.marios271.thermals.hardware.HwManager;
+import net.marios271.thermals.hardware.Net;
 import net.marios271.thermals.ui.bottom.components.NetAdapter;
 import net.marios271.thermals.ui.components.ComponentPanel;
 import net.marios271.thermals.ui.UICommons;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.ArrayList;
 
 public class NetPanel extends ComponentPanel {
     ArrayList<NetAdapter> adapters = new ArrayList<>();
 
-    public NetPanel() {
+    public NetPanel(HwManager hwManager) {
         super("Network Adapters");
 
         setMinimumSize(UICommons.DEFAULT_PANEL_SIZE);
@@ -21,9 +24,15 @@ public class NetPanel extends ComponentPanel {
         container.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         container.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-        adapters.add(new NetAdapter("WiFi", 24, 8));
-        adapters.add(new NetAdapter("Ethernet", 167, 0));
-        adapters.add(new NetAdapter("Tailscale", 0, 0));
+        for (Net net : hwManager.nets()) {
+            NetAdapter adapter = new NetAdapter(
+                net.getName(),
+                (int)net.getDownloadMBs(),
+                (int)net.getUploadMBs()
+            );
+            adapters.add(adapter);
+            container.add(adapter);
+        }
 
         for (NetAdapter adapter : adapters) {
             container.add(adapter);
@@ -31,6 +40,16 @@ public class NetPanel extends ComponentPanel {
         container.add(Box.createVerticalGlue());
 
         add(container, BorderLayout.CENTER);
+    }
+
+    public void update(List<Net> net) {
+        for (int i = 0; i < adapters.size(); i++) {
+            Net data = net.get(i);
+            adapters.get(i).update_values(
+                data.getDownloadMBs(),
+                data.getUploadMBs()
+            );
+        }
     }
 
     @Override
