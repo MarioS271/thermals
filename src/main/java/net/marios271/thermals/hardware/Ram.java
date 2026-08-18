@@ -1,6 +1,12 @@
 package net.marios271.thermals.hardware;
 
+import net.marios271.thermals.Platform;
 import oshi.SystemInfo;
+import oshi.hardware.GlobalMemory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Ram {
     private SystemInfo sysInfo;
@@ -39,7 +45,21 @@ public class Ram {
 
         usedGb = used / 1_073_741_824.0;
         freeGb = available / 1_073_741_824.0;
-        cachedGb = 0;
+        cachedGb = getCachedMem();
+    }
+
+    private double getCachedMem() {
+        if (!Platform.isLinux()) return 0;
+
+        try (var lines = Files.lines(Path.of("/proc/meminfo"))) {
+            var memInfo = lines
+                .filter(l -> l.startsWith("Cached:") || l.startsWith("Buffers:"))
+                .mapToLong(l -> Long.parseLong(l.split("\\s+")[1]))
+                .sum();
+            return memInfo / 1_048_576.0;
+        } catch (IOException e) {
+            return 0;
+        }
     }
 
     public int getCapacityGb() {
