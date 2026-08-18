@@ -4,6 +4,7 @@ import oshi.SystemInfo;
 
 public class Ram {
     private SystemInfo sysInfo;
+    private GlobalMemory mem;
 
     private int capacityGb;
     private int speedMhz;
@@ -16,7 +17,7 @@ public class Ram {
     public Ram init(HwManager _hwManager) {
         sysInfo = _hwManager.sysInfo();
 
-        var mem = sysInfo.getHardware().getMemory();
+        mem = sysInfo.getHardware().getMemory();
         var sticks = mem.getPhysicalMemory();
 
         capacityGb = (int)Math.round(mem.getTotal() / 1_073_741_824.0);
@@ -32,8 +33,6 @@ public class Ram {
     }
 
     public void update() {
-        var mem = sysInfo.getHardware().getMemory();
-
         long total = mem.getTotal();
         long available = mem.getAvailable();
         long used = total - available;
