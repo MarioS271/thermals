@@ -14,7 +14,7 @@ public class NetAdapter extends BaseBottomEntry {
     UpDownLabel _upload;
     
     public NetAdapter(String adapterName, int readRate, int writeRate) {
-        String display = adapterName.length() > 37 ? adapterName.substring(0, 37) + "..." : adapterName;
+        String display = adapterName.length() > 40 ? adapterName.substring(0, 40) + "..." : adapterName;
         super(display);
 
         JPanel details = new JPanel();
