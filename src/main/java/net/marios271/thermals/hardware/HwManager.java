@@ -14,7 +14,6 @@ import java.util.List;
 public class HwManager {
     private SystemInfo sysInfo;
     private HardwareAbstractionLayer hal;
-    private Sensors sensors;
 
     private Cpu cpu;
     private Ram ram;
@@ -27,7 +26,6 @@ public class HwManager {
     public void init() {
         sysInfo = new SystemInfo();
         hal = sysInfo.getHardware();
-        sensors = hal.getSensors();
 
         int numGpus = 0;
         SensorData readerData = null;
