@@ -27,7 +27,11 @@ public class RamPanel extends ComponentPanel {
         hwManager = _hwManager;
         Ram ram = _hwManager.ram();
 
-        super("RAM  -  " + ram.getCapacityGb() + "GB " + ram.getType() + "-" + ram.getSpeedMhz());
+        String title = "RAM  -  " + ram.getCapacityGb() + "GB";
+        if (!Platform.isLinux()) {
+            title += " " + ram.getType() + "-" + ram.getSpeedMhz();
+        }
+        super(title);
 
         usedStat = new Stat(
             Helpers.doubleAsSinglePrecisionString(ram.getUsedGb()),
