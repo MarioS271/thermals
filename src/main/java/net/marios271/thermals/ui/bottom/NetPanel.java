@@ -34,11 +34,7 @@ public class NetPanel extends ComponentPanel {
             container.add(adapter);
         }
 
-        for (NetAdapter adapter : adapters) {
-            container.add(adapter);
-        }
         container.add(Box.createVerticalGlue());
-
         add(container, BorderLayout.CENTER);
     }
 
