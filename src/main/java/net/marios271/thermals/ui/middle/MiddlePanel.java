@@ -26,6 +26,10 @@ public class MiddlePanel extends JPanel {
         for (Gpu gpu : hwManager.gpus()) {
             gpuPanels.add(new GpuPanel(hwManager, gpu.getGpuIndex()));
         }
+        if (gpuPanels.isEmpty()) {
+            setVisible(false);
+            return;
+        }
 
         setBorder(UICommons.fourAxisPadding(topPadding, sidePadding, bottomPadding, sidePadding));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
