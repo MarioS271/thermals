@@ -112,4 +112,7 @@ public class Cpu {
     public double getTempC() {
         return tempC;
     }
+    public String getTempCFormatted() {
+        return tempC < 0 ? "N/A" : Helpers.doubleAsSinglePrecisionString(tempC);
+    }
 }

@@ -45,7 +45,7 @@ public class CpuPanel extends ComponentPanel {
             "Clock Speed"
         );
         tempStat = new Stat(
-            Helpers.doubleAsSinglePrecisionString(hwManager.cpu().getTempC()),
+            hwManager.cpu().getTempCFormatted(),
             "°C",
             "Temperature"
         );
@@ -85,6 +85,6 @@ public class CpuPanel extends ComponentPanel {
         usageStat.setValue(Integer.toString(usagePct));
         coresUsageStat.setValue(Helpers.doubleAsSinglePrecisionString(cpu.getCpuCoreUsage()));
         clockSpdStat.setValue(Helpers.doubleAsSinglePrecisionString(cpu.getClockSpeedGhz()));
-        tempStat.setValue(Helpers.doubleAsSinglePrecisionString(cpu.getTempC()));
+        tempStat.setValue(cpu.getTempCFormatted());
     }
 }
