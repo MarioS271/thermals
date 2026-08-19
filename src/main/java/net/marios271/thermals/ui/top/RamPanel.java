@@ -50,11 +50,13 @@ public class RamPanel extends ComponentPanel {
         );
 
         JPanel stats = new JPanel();
-        stats.setLayout(new FlowLayout(FlowLayout.CENTER, UICommons.PANEL_STAT_SPACING, 0));
+        stats.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         stats.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         stats.setMaximumSize(new Dimension(Integer.MAX_VALUE, stats.getPreferredSize().height));
         stats.add(usedStat);
+        stats.add(Box.createHorizontalStrut(UICommons.PANEL_STAT_SPACING));
         if (!Platform.isWindows()) stats.add(cachedStat);
+        stats.add(Box.createHorizontalStrut(UICommons.PANEL_STAT_SPACING));
         stats.add(freeStat);
 
         JPanel main = new JPanel();
