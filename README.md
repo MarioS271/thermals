@@ -1,8 +1,8 @@
 # Thermals
 
-A lightweight system monitor that lives in your Windows system tray, built with Java Swing and a dark JetBrains-inspired look.
-
-The tray icon changes color in real time based on your CPU temperature (green when cool, red when hot). Left-click it to open a compact popup with live stats and graphs for CPU, GPU, RAM, disk, and network.
+A lightweight system monitor, built with Java Swing and a dark JetBrains-inspired look.
+It features an informative UI aswell as a tray icon (if supported by your DE/WM/OS) which changes color
+depending on the current CPU temperature.
 
 ---
 
@@ -19,23 +19,24 @@ The tray icon changes color in real time based on your CPU temperature (green wh
 
 ## Tech Stack
 
-| Library/Tool                                    | Purpose                |
-|-------------------------------------------------|------------------------|
-| AWT and Swing                                   | Tray Icon and Popup UI |
-| [FlatLaf](https://www.formdev.com/flatlaf/)     | Dark look-and-feel     |
-| [JFreeChart](https://www.jfree.org/jfreechart/) | Live history graphs    |
-| OSHI, PawnIO, NVAPI, nvidia-smi, hwmon, ...     | Hardware & sensor data |
+| Library/Tool              | Purpose                    |
+|---------------------------|----------------------------|
+| AWT and Swing             | Tray Icon and Popup UI     |
+| FlatLaf                   | Dark look-and-feel         |
+| JFreeChart                | Charts                     |
+| OSHI, PawnIO, NVAPI, ADLX | Data Monitoring on Windows |
+| OSHI, nvidia-smi, hwmon   | Data Monitoring on Linux   |
 
 ---
 
 ## Data Sources
 
-| Component                     | Windows          | Linux                             |
-|-------------------------------|------------------|-----------------------------------|
-| CPU usage, RAM, disk, network | OSHI             | OSHI                              |
-| CPU temp & freq               | PawnIO           | OSHI                              |
-| GPU data (NVIDIA)             | NVAPI & D3DKMTHK | `nvidia-smi`                      |
-| GPU data (AMD)                | D3DKMTHK         | sysfs hwmon (`/sys/class/hwmon/`) |
+| Component         | Windows         | Linux        |
+|-------------------|-----------------|--------------|
+| CPU temp          | PawnIO          | OSHI         |
+| GPU data (NVIDIA) | NVAPI, D3DKMTHK | `nvidia-smi` |
+| GPU data (AMD)    | ADLX, D3DKMTHK  | sysfs hwmon  |
+| All other stats   | OSHI            | OSHI         |
 
 ---
 
@@ -44,30 +45,15 @@ The tray icon changes color in real time based on your CPU temperature (green wh
 | OS      | Supported? |
 |---------|------------|
 | Windows | Yes        |
-| Linux   | Not Yet    |
+| Linux   | Yes        |
 | macOS   | No         |
 
 > If you are willing to add support for any of the unsupported platforms, I'd be happy to merge a PR!
 
 ## Requirements
 
-- Java 17+
-
----
-
-## Building
-
-```bash
-./gradlew build
-```
-
-Run with:
-
-```bash
-./gradlew run
-```
-
-The app starts minimized to the system tray. Left-click the icon to open the stats window. Right-click for a context menu with an exit option.
+- JBR 25 (Jetbrains Runtime)
+- PawnIO Kernel Driver (Windows only)
 
 ---
 
