@@ -18,7 +18,7 @@ jobs:
 
       - name: Set up JBR 25
         run: |
-          curl -L -o jbr.zip https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25.0.4-windows-x64-b508.27.zip
+          curl -L -o jbr.zip https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-25.0.4-windows-x64-b508.27.zip
           Expand-Archive jbr.zip -DestinationPath "$env:USERPROFILE\.jdks\jbr-25"
           $jbrHome = (Get-ChildItem "$env:USERPROFILE\.jdks\jbr-25" | Select-Object -First 1).FullName
           echo "JAVA_HOME=$jbrHome" >> $env:GITHUB_ENV
@@ -57,7 +57,7 @@ jobs:
 
       - name: Set up JBR 25
         run: |
-          curl -L -o jbr.tar.gz https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25.0.4-linux-x64-b508.27.tar.gz
+          curl -L -o jbr.tar.gz https://cache-redirector.jetbrains.com/intellij-jbr/jbrsdk-25.0.4-linux-x64-b508.27.tar.gz
           mkdir -p ~/.jdks/jbr-25
           tar -xzf jbr.tar.gz -C ~/.jdks/jbr-25 --strip-components=1
           echo "JAVA_HOME=$HOME/.jdks/jbr-25" >> $GITHUB_ENV

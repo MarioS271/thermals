@@ -50,17 +50,13 @@ val jlinkModules = listOf(
 ).joinToString(",")
 
 tasks.register<Exec>("jlink") {
-    val javaHome = System.getenv("JAVA_HOME") ?: System.getProperty("java.home")
-    val isWindows = System.getProperty("os.name").lowercase().contains("win")
-    val jlink = if (isWindows) "$javaHome/bin/jlink.exe" else "$javaHome/bin/jlink"
-
     // Clean any previous jre output so jlink doesn't refuse to run
     doFirst {
         delete("build/jre")
     }
 
     commandLine(
-        jlink,
+        "jlink",
         "--no-header-files",
         "--no-man-pages",
         "--strip-debug",
