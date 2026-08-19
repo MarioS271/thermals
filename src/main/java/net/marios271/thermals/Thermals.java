@@ -27,18 +27,12 @@ public class Thermals {
 
     public static void main(String[] args) {
         if (Platform.isWindows() && !Platform.isAdminWindows()) {
-            Path log = Path.of(System.getenv("TEMP") + "/thermals_debug.txt");
             try {
-                String exePath = ProcessHandle.current().info().command().orElse("null");
-                Files.writeString(log, "exePath: " + exePath + "\n");
-                if (exePath != null) {
+                String exePath = ProcessHandle.current().info().command().orElse(null);
+                if (exePath != null)
                     new ProcessBuilder("powershell", "-Command",
-                        "Start-Process '" + exePath + "' -Verb RunAs")
-                        .start();
-                }
-            } catch (Exception e) {
-                try { Files.writeString(log, "error: " + e + "\n"); } catch (Exception ignored) {}
-            }
+                        "Start-Process '" + exePath + "' -Verb RunAs").start();
+            } catch (Exception ignored) {}
             System.exit(0);
         }
 

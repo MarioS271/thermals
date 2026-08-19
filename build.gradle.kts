@@ -33,8 +33,44 @@ tasks.test {
     useJUnitPlatform()
 }
 
+// Modules required by Swing, FlatLaf, JFreeChart, JNA, OSHI, Gson
+val jlinkModules = listOf(
+    "java.base",
+    "java.desktop",
+    "java.logging",
+    "java.management",
+    "java.management.rmi",
+    "java.naming",
+    "java.prefs",
+    "java.rmi",
+    "java.security.jgss",
+    "java.sql",
+    "java.xml",
+    "jdk.unsupported"
+).joinToString(",")
+
+tasks.register<Exec>("jlink") {
+    val javaHome = System.getenv("JAVA_HOME") ?: System.getProperty("java.home")
+    val isWindows = System.getProperty("os.name").lowercase().contains("win")
+    val jlink = if (isWindows) "$javaHome/bin/jlink.exe" else "$javaHome/bin/jlink"
+
+    // Clean any previous jre output so jlink doesn't refuse to run
+    doFirst {
+        delete("build/jre")
+    }
+
+    commandLine(
+        jlink,
+        "--no-header-files",
+        "--no-man-pages",
+        "--strip-debug",
+        "--add-modules", jlinkModules,
+        "--output", "build/jre"
+    )
+}
+
 tasks.register<Exec>("jpackageAppImage") {
-    dependsOn("jar")
+    dependsOn("jlink", "jar")
 
     val os = System.getProperty("os.name").lowercase()
     val isWindows = os.contains("win")
@@ -58,7 +94,7 @@ tasks.register<Exec>("jpackageAppImage") {
         add("--app-version"); add("${project.version}")
         add("--type"); add("app-image")
         add("--dest"); add("build/package")
-        add("--runtime-image"); add(System.getenv("JAVA_HOME") ?: System.getProperty("java.home").removeSuffix("/jre"))
+        add("--runtime-image"); add("build/jre")
         if (isWindows) { add("--icon"); add("logo/logo.ico") }
         if (isLinux) { add("--icon"); add("logo/logo_256.png") }
     })
