@@ -26,7 +26,7 @@ public class Ram {
         mem = sysInfo.getHardware().getMemory();
         var sticks = mem.getPhysicalMemory();
 
-        capacityGb = (int)Math.round(mem.getTotal() / 1_073_741_824.0);
+        capacityGb = (int)Math.ceil(mem.getTotal() / 1_073_741_824.0);
 
         if (!sticks.isEmpty()) {
             type = sticks.getFirst().getMemoryType();
