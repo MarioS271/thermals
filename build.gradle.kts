@@ -95,7 +95,10 @@ tasks.register<Exec>("package") {
 
     val os = System.getProperty("os.name").lowercase()
 
-    doFirst { delete("build/installer") }
+    doFirst {
+        delete("build/installer")
+        mkdir("build/installer")
+    }
 
     if (os.contains("win")) {
         commandLine(
