@@ -7,11 +7,11 @@ import net.marios271.thermals.hardware.windows_reader.WindowsReader;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.NetworkIF;
-import oshi.hardware.Sensors;
 import oshi.software.os.OSFileStore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class HwManager {
     private SystemInfo sysInfo;
@@ -24,6 +24,11 @@ public class HwManager {
     private ArrayList<Net> nets = new ArrayList<>();
 
     private Thread pollingThread;
+
+    private static final Set<String> IGNORED_FS_TYPES = Set.of(
+        "tmpfs", "devtmpfs", "sysfs", "proc", "cgroup",
+        "cgroup2", "pstore", "none", "overlay", "squashfs"
+    );
 
     private final List<HwUpdateListener> listeners = new ArrayList<>();
 
@@ -43,8 +48,11 @@ public class HwManager {
         ram = new Ram().init(this);
         for (int i = 0; i < numGpus; ++i)
             gpus.add(new Gpu().init(this, readerData, i));
-        for (OSFileStore fileStore : sysInfo.getOperatingSystem().getFileSystem().getFileStores())
+        for (OSFileStore fileStore : sysInfo.getOperatingSystem().getFileSystem().getFileStores()) {
+            if (Platform.isLinux() && IGNORED_FS_TYPES.contains(fileStore.getType()))
+                continue;
             disks.add(new Disk().init(this, fileStore));
+        }
         for (NetworkIF nif : hal.getNetworkIFs()) {
             if (Net.isValid(nif)) {
                 nets.add(new Net().init(this, nif));
