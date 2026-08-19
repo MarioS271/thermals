@@ -43,6 +43,17 @@ public class HwManager {
             if (readerData != null)
                 numGpus = readerData.gpus().size();
         }
+        else if (Platform.isLinux()) {
+            try {
+                Process proc = Runtime.getRuntime().exec(new String[]{
+                    "nvidia-smi", "--query-gpu=name", "--format=csv,noheader"
+                });
+
+                String output = new String(proc.getInputStream().readAllBytes()).trim();
+                if (!output.isEmpty())
+                    numGpus = output.split("\n").length;
+            } catch (Exception _) {}
+        }
 
         cpu = new Cpu().init(this);
         ram = new Ram().init(this);

@@ -5,8 +5,6 @@ import net.marios271.thermals.hardware.windows_reader.GpuData;
 import net.marios271.thermals.hardware.windows_reader.SensorData;
 
 public class Gpu {
-    private HwManager hwManager;
-
     private String gpuName;
     private int gpuIndex;
 
@@ -15,12 +13,38 @@ public class Gpu {
     private volatile long vramUsedMb;
     private volatile long vramTotalMb;
 
+    private Process nvidiaSmiProcess;
+    private boolean isNvidia = false;
+
+    private static String readNvidiaSmi(String query, int index) {
+        try {
+            Process proc = Runtime.getRuntime().exec(new String[]{
+                "nvidia-smi",
+                query,
+                "--format=csv,noheader,nounits",
+                "-i", String.valueOf(index)
+            });
+
+            String result = new String(proc.getInputStream().readAllBytes()).trim();
+            return result.isEmpty() ? null : result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public Gpu init(HwManager _hwManager, SensorData readerData, int _gpuIndex) {
-        hwManager = _hwManager;
         gpuIndex = _gpuIndex;
 
         if (Platform.isWindows()) {
             gpuName = readerData.gpus().get(gpuIndex).name();
+        }
+        else if (Platform.isLinux()) {
+            gpuName = readNvidiaSmi("--query-gpu=name", _gpuIndex);
+            if (gpuName != null) {
+                isNvidia = true;
+                String vram = readNvidiaSmi("--query-gpu=memory.total", _gpuIndex);
+                vramTotalMb = vram != null ? Long.parseLong(vram.replace(" MiB", "").trim()) : 0;
+            }
         }
 
         return this;
@@ -34,6 +58,21 @@ public class Gpu {
             usagePct = gpuData.usagePct();
             vramUsedMb = gpuData.vramUsedMb();
             vramTotalMb = gpuData.vramTotalMb();
+        }
+        else if (Platform.isLinux()) {
+            String csv = readNvidiaSmi(
+                "--query-gpu=temperature.gpu,utilization.gpu,memory.used",
+                gpuIndex
+            );
+
+            if (csv != null) {
+                String[] parts = csv.split(",");
+                if (parts.length == 3) {
+                    tempC = Double.parseDouble(parts[0].trim());
+                    usagePct = Double.parseDouble(parts[1].replace(" %", "").trim());
+                    vramUsedMb = Long.parseLong(parts[2].replace(" MiB", "").trim());
+                }
+            }
         }
     }
 
