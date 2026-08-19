@@ -20,7 +20,9 @@ public class Disk extends BaseBottomEntry {
     UpDownLabel _writeRate;
 
     public Disk(String diskName, long totalGb, String mountpoint, int usedPct, long usedGb, double readMBs, double writeMBs) {
-        super(diskName + " (" + mountpoint + ")");
+        String name = diskName + " (" + mountpoint + ")";
+        String display = name.length() > 35 ? name.substring(0, 35) + "..." : name;
+        super(display);
 
         JPanel details = new JPanel();
         details.setLayout(new BoxLayout(details, BoxLayout.X_AXIS));
