@@ -97,9 +97,9 @@ tasks.register<Exec>("package") {
                 Categories=System;Monitor;
             """.trimIndent())
 
-            // existing launcher patch
             val launcher = file("build/package/Thermals/bin/Thermals")
             val content = launcher.readText()
+            println("launcher content:\n" + launcher.readText())
             launcher.writeText(content.replace(
                 "exec \"\$JAVA_BIN\"",
                 "exec \"\$JAVA_BIN\" -Dawt.toolkit.name=WLToolkit"
