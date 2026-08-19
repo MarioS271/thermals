@@ -2,7 +2,6 @@ package net.marios271.thermals.tray;
 
 import net.marios271.thermals.hardware.Gpu;
 import net.marios271.thermals.hardware.HwManager;
-import net.marios271.thermals.hardware.HwUpdateListener;
 import net.marios271.thermals.ui.Window;
 
 import java.awt.*;
@@ -10,13 +9,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
-public class TrayManager implements HwUpdateListener {
-    HwManager hwManager;
+public class TrayManager {
+    static HwManager hwManager;
 
-    SystemTray sysTray;
-    TrayIcon icon;
+    static SystemTray sysTray;
+    static TrayIcon icon;
 
-    MouseListener mouseListener = new MouseListener() {
+    static MouseListener mouseListener = new MouseListener() {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1)
@@ -36,16 +35,15 @@ public class TrayManager implements HwUpdateListener {
         public void mouseExited(MouseEvent e) {}
     };
 
-    public void start(HwManager _hwManager) {
+    public static void start(HwManager _hwManager) {
         if (!SystemTray.isSupported()) {
-            System.err.println("System does not support system tray, exiting");
-            System.exit(1);
+            return;
         }
 
         hwManager = _hwManager;
         sysTray = SystemTray.getSystemTray();
 
-        BufferedImage img = new TrayIconDrawer().draw(-1, sysTray.getTrayIconSize());
+        BufferedImage img = TrayIconDrawer.draw(-1, sysTray.getTrayIconSize());
         icon = new TrayIcon(img);
         icon.setImageAutoSize(false);
         icon.addMouseListener(mouseListener);
@@ -57,10 +55,10 @@ public class TrayManager implements HwUpdateListener {
             System.err.println("Exception while adding icon to tray: " + e);
         }
 
-        hwManager.addUpdateListener(this);
+        hwManager.addUpdateListener(TrayManager::onHwUpdate);
     }
 
-    PopupMenu buildMenu() {
+    static PopupMenu buildMenu() {
         MenuItem openWindow = new MenuItem("Open Popup Window");
         openWindow.addActionListener(e -> Window.init(hwManager));
 
@@ -74,14 +72,17 @@ public class TrayManager implements HwUpdateListener {
         return menu;
     }
 
-    @Override
-    public void onHwUpdate() {
+    public static void onHwUpdate() {
         double cpuTemp = hwManager.cpu().getTempC();
         double total = 0; int count = 0;
         for (Gpu gpu : hwManager.gpus()) { total += gpu.getTempC(); count++; }
         double gpuTemp = count > 0 ? total / count : 0;
 
-        icon.setImage(new TrayIconDrawer().draw(cpuTemp, sysTray.getTrayIconSize()));
+        icon.setImage(TrayIconDrawer.draw(cpuTemp, sysTray.getTrayIconSize()));
         icon.setToolTip("Thermals\n\nCPU: " + cpuTemp + " °C\nGPU: " + gpuTemp + " °C");
+    }
+
+    public static boolean isSupported() {
+        return SystemTray.isSupported();
     }
 }

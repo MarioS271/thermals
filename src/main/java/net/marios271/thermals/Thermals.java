@@ -3,6 +3,7 @@ package net.marios271.thermals;
 import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.tray.TrayManager;
 import net.marios271.thermals.ui.PopupMessage;
+import net.marios271.thermals.ui.Window;
 
 public class Thermals {
     public static int DATA_UPDATE_INTERVAL_MS = 500;
@@ -37,7 +38,7 @@ public class Thermals {
         HwManager hwManager = new HwManager();
         hwManager.init();
 
-        TrayManager trayMan = new TrayManager();
-        trayMan.start(hwManager);
+        Window.init(hwManager);
+        TrayManager.start(hwManager);
     }
 }

@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
 import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.hardware.HwUpdateListener;
+import net.marios271.thermals.tray.TrayManager;
 import net.marios271.thermals.ui.bottom.BottomPanel;
 import net.marios271.thermals.ui.middle.MiddlePanel;
 import net.marios271.thermals.ui.top.TopPanel;
@@ -23,6 +24,8 @@ public class Window implements HwUpdateListener{
         @Override
         public void windowClosing(WindowEvent e) {
             e.getWindow().dispose();
+            if (!TrayManager.isSupported())
+                System.exit(0);
         }
 
         @Override

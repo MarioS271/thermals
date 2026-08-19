@@ -4,14 +4,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class TrayIconDrawer {
-    final int cornerRadius = 10;
+    static final int cornerRadius = 10;
 
-    final float coldHue = 0.33f;
-    final float hotHue = 0f;
-    final int coldTemp = 30;  // °C
-    final int hotTemp = 90;  // °C
+    static final float coldHue = 0.33f;
+    static final float hotHue = 0f;
+    static final int coldTemp = 30;  // °C
+    static final int hotTemp = 90;  // °C
 
-    public BufferedImage draw(double tempCelsius, Dimension iconSize) {
+    public static BufferedImage draw(double tempCelsius, Dimension iconSize) {
         BufferedImage img = new BufferedImage(iconSize.width, iconSize.height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = img.createGraphics();
 
@@ -25,7 +25,7 @@ public class TrayIconDrawer {
         return img;
     }
 
-    private Color generateColor(double temp) {
+    private static Color generateColor(double temp) {
         float t = (float) (temp - coldTemp) / (hotTemp - coldTemp);
         float hue = coldHue + t * (hotHue - coldHue);
         return Color.getHSBColor(hue, 1f, 1f);
