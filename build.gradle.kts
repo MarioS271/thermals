@@ -81,6 +81,17 @@ tasks.register<Exec>("package") {
         )
     } else {
         doFirst {
+            val desktopFile = file("build/package/Thermals/Thermals.desktop")
+            desktopFile.writeText("""
+                [Desktop Entry]
+                Name=Thermals
+                Exec=Thermals
+                Icon=Thermals
+                Type=Application
+                Categories=System;Monitor;
+            """.trimIndent())
+
+            // existing launcher patch
             val launcher = file("build/package/Thermals/bin/Thermals")
             val content = launcher.readText()
             launcher.writeText(content.replace(
