@@ -58,8 +58,8 @@ tasks.register<Exec>("jpackageAppImage") {
         add("--app-version"); add("${project.version}")
         add("--type"); add("app-image")
         add("--dest"); add("build/package")
-        if (isWindows) { add("--icon"); add("resources/icon.ico") }
-        if (isLinux) { add("--icon"); add("resources/icon.png") }
+        if (isWindows) { add("--icon"); add("logo/logo.ico") }
+        if (isLinux) { add("--icon"); add("logo/logo_256.png") }
     })
 }
 
