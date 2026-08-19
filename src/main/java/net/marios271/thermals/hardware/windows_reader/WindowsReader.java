@@ -12,7 +12,7 @@ public class WindowsReader {
     private static final java.util.Set<String> notifiedErrors = new java.util.HashSet<>();
 
     private static Path findReaderExe() {
-        Path prod = Path.of("pawnio_reader.exe");
+        Path prod = Path.of("app/pawnio_reader.exe");
         if (Files.exists(prod)) return prod;
 
         Path dev = Path.of("resources/windows/pawnio_reader.exe");
