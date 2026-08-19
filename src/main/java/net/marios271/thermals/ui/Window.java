@@ -97,6 +97,11 @@ public class Window implements HwUpdateListener{
 
             frame.add(scroll);
             frame.setVisible(true);
+            frame.setExtendedState(frame.getExtendedState() & ~Frame.ICONIFIED);
+            frame.setAlwaysOnTop(true);
+            frame.toFront();
+            frame.requestFocus();
+            frame.setAlwaysOnTop(false);
         });
     }
 
