@@ -72,7 +72,7 @@ public class Thermals {
                         Runtime.getRuntime().exec(new String[]{
                             "powershell", "-Command",
                             "Start-Process", "'" + installer.toAbsolutePath() + "'",
-                            "-ArgumentList", "'-silent'",
+                            "-ArgumentList", "'-install -silent'",
                             "-Verb", "RunAs",
                             "-Wait"
                         }).waitFor();
