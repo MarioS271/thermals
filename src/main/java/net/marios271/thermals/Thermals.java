@@ -6,11 +6,18 @@ import net.marios271.thermals.ui.PopupMessage;
 import net.marios271.thermals.ui.Window;
 
 import javax.swing.*;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 public class Thermals {
     public static int DATA_UPDATE_INTERVAL_MS = 500;
+
+    @SuppressWarnings("unused")
+    private static FileChannel lockChannel;
+    private static FileLock lockHandle;
 
     private static String getJarPath() {
         // thisll fail in dev; if ur testing this u need to start the ide as admin
@@ -38,6 +45,10 @@ public class Thermals {
                         .start();
                 }
             } catch (Exception ignored) {}
+            System.exit(0);
+        }
+
+        if (!lockInstance()) {
             System.exit(0);
         }
 
@@ -80,6 +91,22 @@ public class Thermals {
 
         Window.init(hwManager);
         TrayManager.start(hwManager);
+    }
+
+    private static boolean lockInstance() {
+        try {
+            Path lockPath = Path.of(System.getProperty("java.io.tmpdir"), "thermals.lock");
+            lockChannel = FileChannel.open(lockPath,
+                StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            lockHandle = lockChannel.tryLock();
+            if (lockHandle == null) {
+                lockChannel.close();
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     private static boolean isPawnIOInstalled() {
