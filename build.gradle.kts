@@ -81,6 +81,12 @@ tasks.register<Exec>("package") {
         )
     } else {
         doFirst {
+            copy {
+                from("logo/logo_256.png")
+                into("build/package/Thermals")
+                rename { "Thermals.png" }
+            }
+
             val desktopFile = file("build/package/Thermals/Thermals.desktop")
             desktopFile.writeText("""
                 [Desktop Entry]

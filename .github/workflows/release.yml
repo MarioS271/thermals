@@ -32,7 +32,7 @@ jobs:
           cd pawnio-reader
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
-          copy build\Release\pawnio-reader.exe ..\resources\windows\
+          copy build\Release\pawnio_reader.exe ..\resources\windows\
 
       - name: Create installer directory
         run: mkdir -p build/installer
