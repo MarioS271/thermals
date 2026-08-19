@@ -80,12 +80,14 @@ tasks.register<Exec>("package") {
             "--win-menu"
         )
     } else {
-        val launcher = file("build/package/Thermals/bin/Thermals")
-        val content = launcher.readText()
-        launcher.writeText(content.replace(
-            "exec \"\$JAVA_BIN\"",
-            "exec \"\$JAVA_BIN\" -Dawt.toolkit.name=WLToolkit"
-        ))
+        doFirst {
+            val launcher = file("build/package/Thermals/bin/Thermals")
+            val content = launcher.readText()
+            launcher.writeText(content.replace(
+                "exec \"\$JAVA_BIN\"",
+                "exec \"\$JAVA_BIN\" -Dawt.toolkit.name=WLToolkit"
+            ))
+        }
 
         commandLine(
             "appimagetool",
