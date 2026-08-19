@@ -5,6 +5,10 @@ import net.marios271.thermals.tray.TrayManager;
 import net.marios271.thermals.ui.PopupMessage;
 import net.marios271.thermals.ui.Window;
 
+import javax.swing.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class Thermals {
     public static int DATA_UPDATE_INTERVAL_MS = 500;
 
@@ -24,15 +28,51 @@ public class Thermals {
     public static void main(String[] args) {
         if (Platform.isWindows() && !Platform.isAdminWindows()) {
             try {
-                new ProcessBuilder("powershell", "-Command",
-                    "Start-Process javaw -ArgumentList '-jar \"" + getJarPath() + "\"' -Verb RunAs")
-                    .start();
+                String exePath = ProcessHandle.current().info().command().orElse(null);
+                if (exePath != null) {
+                    new ProcessBuilder("powershell", "-Command",
+                        "Start-Process '" + exePath + "' -Verb RunAs")
+                        .start();
+                }
             } catch (Exception e) {
                 PopupMessage.createErrPopup("Failed to start as administrator");
-                System.err.println("Failed to start as an administator");
                 System.exit(1);
             }
             System.exit(0);
+        }
+
+        if (Platform.isWindows() && !isPawnIOInstalled()) {
+            int result = JOptionPane.showConfirmDialog(
+                null,
+                "Thermals uses the PawnIO kernel driver for CPU temperature readings.\n\n" +
+                    "Would you like to install it now? (requires administrator privileges)",
+                "Install PawnIO Driver",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (result == JOptionPane.YES_OPTION) {
+                Path installer = findPawnIOInstaller();
+                if (installer == null) {
+                    JOptionPane.showMessageDialog(null,
+                        "PawnIO installer not found. Please reinstall Thermals.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    try {
+                        Runtime.getRuntime().exec(new String[]{
+                            "powershell", "-Command",
+                            "Start-Process", "'" + installer.toAbsolutePath() + "'",
+                            "-ArgumentList", "'/S'",
+                            "-Verb", "RunAs",
+                            "-Wait"
+                        }).waitFor();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null,
+                            "Failed to launch PawnIO installer:\n" + e.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
         }
 
         HwManager hwManager = new HwManager();
@@ -40,5 +80,27 @@ public class Thermals {
 
         Window.init(hwManager);
         TrayManager.start(hwManager);
+    }
+
+    private static boolean isPawnIOInstalled() {
+        try {
+            Process check = Runtime.getRuntime().exec(
+                new String[]{"sc", "query", "PawnIO"}
+            );
+            check.waitFor();
+            return check.exitValue() == 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static Path findPawnIOInstaller() {
+        Path prod = Path.of("app/PawnIO_setup.exe");
+        if (Files.exists(prod)) return prod;
+
+        Path dev = Path.of("resources/windows/PawnIO_setup.exe");
+        if (Files.exists(dev)) return dev;
+
+        return null;
     }
 }

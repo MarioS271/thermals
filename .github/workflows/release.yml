@@ -34,6 +34,10 @@ jobs:
           cmake --build build --config Release
           copy build\Release\pawnio_reader.exe ..\resources\windows\
 
+      - name: Download PawnIO installer
+        run: |
+          curl -L -o resources/windows/PawnIO_setup.exe https://github.com/namazso/PawnIO.Setup/releases/latest/download/PawnIO_setup.exe
+
       - name: Create installer directory
         run: mkdir -p build/installer
 
