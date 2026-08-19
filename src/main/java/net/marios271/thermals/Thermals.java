@@ -27,11 +27,16 @@ public class Thermals {
 
     public static void main(String[] args) {
         if (Platform.isWindows() && !Platform.isAdminWindows()) {
+            String exePath = System.getProperty("jpackage.app-path");
+            if (exePath == null) {
+                exePath = ProcessHandle.current().info().command().orElse(null);
+            }
             try {
-                String exePath = ProcessHandle.current().info().command().orElse(null);
-                if (exePath != null)
+                if (exePath != null) {
                     new ProcessBuilder("powershell", "-Command",
-                        "Start-Process '" + exePath + "' -Verb RunAs").start();
+                        "Start-Process '" + exePath + "' -Verb RunAs")
+                        .start();
+                }
             } catch (Exception ignored) {}
             System.exit(0);
         }
