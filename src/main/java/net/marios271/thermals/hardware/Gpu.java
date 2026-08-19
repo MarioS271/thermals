@@ -4,6 +4,9 @@ import net.marios271.thermals.Platform;
 import net.marios271.thermals.hardware.windows_reader.GpuData;
 import net.marios271.thermals.hardware.windows_reader.SensorData;
 
+import java.io.File;
+import java.nio.file.Files;
+
 public class Gpu {
     private String gpuName;
     private int gpuIndex;
@@ -15,6 +18,7 @@ public class Gpu {
 
     private Process nvidiaSmiProcess;
     private boolean isNvidia = false;
+    private String amdHwmonPath = null;
 
     private static String readNvidiaSmi(String query, int index) {
         try {
@@ -45,6 +49,41 @@ public class Gpu {
                 String vram = readNvidiaSmi("--query-gpu=memory.total", _gpuIndex);
                 vramTotalMb = vram != null ? Long.parseLong(vram.replace(" MiB", "").trim()) : 0;
             }
+            else {
+                try {
+                    File hwmonDir = new File("/sys/class/hwmon");
+                    for (File hwmon : hwmonDir.listFiles()) {
+                        File nameFile = new File(hwmon, "name");
+                        if (!nameFile.exists()) continue;
+                        if (!Files.readString(nameFile.toPath()).trim().equals("amdgpu")) continue;
+
+                        isNvidia = false;
+                        amdHwmonPath = hwmon.getPath();
+
+                        File drmLink = new File(hwmon, "device/drm");
+                        if (drmLink.exists()) {
+                            gpuName = "AMD GPU";
+
+                            for (File card : drmLink.listFiles()) {
+                                if (card.getName().startsWith("card")) {
+                                    File deviceName = new File(card, "device/product_name");
+
+                                    if (deviceName.exists())
+                                        gpuName = Files.readString(deviceName.toPath()).trim();
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        File vramFile = new File(hwmon, "device/mem_info_vram_total");
+                        if (vramFile.exists())
+                            vramTotalMb = Long.parseLong(Files.readString(vramFile.toPath()).trim()) / 1_048_576L;
+
+                        break;
+                    }
+                } catch (Exception _) {}
+            }
         }
 
         return this;
@@ -60,18 +99,33 @@ public class Gpu {
             vramTotalMb = gpuData.vramTotalMb();
         }
         else if (Platform.isLinux()) {
-            String csv = readNvidiaSmi(
-                "--query-gpu=temperature.gpu,utilization.gpu,memory.used",
-                gpuIndex
-            );
-
-            if (csv != null) {
-                String[] parts = csv.split(",");
-                if (parts.length == 3) {
-                    tempC = Double.parseDouble(parts[0].trim());
-                    usagePct = Double.parseDouble(parts[1].replace(" %", "").trim());
-                    vramUsedMb = Long.parseLong(parts[2].replace(" MiB", "").trim());
+            if (isNvidia) {
+                String csv = readNvidiaSmi(
+                    "--query-gpu=temperature.gpu,utilization.gpu,memory.used",
+                    gpuIndex
+                );
+                if (csv != null) {
+                    String[] parts = csv.split(",");
+                    if (parts.length == 3) {
+                        tempC    = Double.parseDouble(parts[0].trim());
+                        usagePct = Double.parseDouble(parts[1].trim());
+                        vramUsedMb = Long.parseLong(parts[2].trim());
+                    }
                 }
+            } else if (amdHwmonPath != null) {
+                try {
+                    File tempFile = new File(amdHwmonPath + "/temp1_input");
+                    if (tempFile.exists())
+                        tempC = Long.parseLong(Files.readString(tempFile.toPath()).trim()) / 1000.0;
+
+                    File usageFile = new File(amdHwmonPath + "/device/gpu_busy_percent");
+                    if (usageFile.exists())
+                        usagePct = Long.parseLong(Files.readString(usageFile.toPath()).trim());
+
+                    File vramUsedFile = new File(amdHwmonPath + "/device/mem_info_vram_used");
+                    if (vramUsedFile.exists())
+                        vramUsedMb = Long.parseLong(Files.readString(vramUsedFile.toPath()).trim()) / 1_048_576L;
+                } catch (Exception _) {}
             }
         }
     }
