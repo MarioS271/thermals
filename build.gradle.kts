@@ -58,7 +58,7 @@ tasks.register<Exec>("jpackageAppImage") {
         add("--app-version"); add("${project.version}")
         add("--type"); add("app-image")
         add("--dest"); add("build/package")
-        add("--win-console")
+        add("--runtime-image"); add(System.getenv("JAVA_HOME") ?: System.getProperty("java.home").removeSuffix("/jre"))
         if (isWindows) { add("--icon"); add("logo/logo.ico") }
         if (isLinux) { add("--icon"); add("logo/logo_256.png") }
     })
