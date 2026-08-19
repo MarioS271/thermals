@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "net.marios271"
-version = "1.0-SNAPSHOT"
+version = System.getenv("RELEASE_TAG")?.removePrefix("v") ?: "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -31,4 +31,66 @@ java {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.register<Exec>("jpackageAppImage") {
+    dependsOn("jar")
+
+    val os = System.getProperty("os.name").lowercase()
+    val isWindows = os.contains("win")
+    val isLinux = os.contains("linux")
+
+    doFirst {
+        if (isWindows) {
+            copy {
+                from("resources/windows")
+                into("build/libs")
+            }
+        }
+    }
+
+    commandLine(buildList {
+        add("jpackage")
+        add("--input"); add("build/libs")
+        add("--main-jar"); add("thermals-${project.version}.jar")
+        add("--main-class"); add("net.marios271.thermals.Thermals")
+        add("--name"); add("Thermals")
+        add("--app-version"); add("${project.version}")
+        add("--type"); add("app-image")
+        add("--dest"); add("build/package")
+        if (isWindows) { add("--icon"); add("resources/icon.ico") }
+        if (isLinux) { add("--icon"); add("resources/icon.png") }
+    })
+}
+
+tasks.register<Exec>("package") {
+    dependsOn("jpackageAppImage")
+
+    val os = System.getProperty("os.name").lowercase()
+
+    if (os.contains("win")) {
+        commandLine(
+            "jpackage",
+            "--app-image", "build/package/Thermals",
+            "--name", "Thermals",
+            "--app-version", "${project.version}",
+            "--type", "msi",
+            "--dest", "build/installer",
+            "--win-shortcut",
+            "--win-menu"
+        )
+    } else {
+        val launcher = file("build/package/Thermals/bin/Thermals")
+        val content = launcher.readText()
+        launcher.writeText(content.replace(
+            "exec \"\$JAVA_BIN\"",
+            "exec \"\$JAVA_BIN\" -Dawt.toolkit.name=WLToolkit"
+        ))
+
+        commandLine(
+            "appimagetool",
+            "build/package/Thermals",
+            "build/installer/Thermals.AppImage"
+        )
+    }
 }

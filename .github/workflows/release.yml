@@ -1,0 +1,116 @@
+name: Release
+
+env:
+  RELEASE_TAG: ${{ github.ref_name }}
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JBR 25
+        run: |
+          curl -L -o jbr.zip https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25.0.4-windows-x64-b508.27.zip
+          Expand-Archive jbr.zip -DestinationPath "$env:USERPROFILE\.jdks\jbr-25"
+          $jbrHome = (Get-ChildItem "$env:USERPROFILE\.jdks\jbr-25" | Select-Object -First 1).FullName
+          echo "JAVA_HOME=$jbrHome" >> $env:GITHUB_ENV
+          echo "$jbrHome\bin" >> $env:GITHUB_PATH
+
+      - name: Build jar
+        run: ./gradlew jar
+
+      - name: Create installer directory
+        run: mkdir -p build/installer
+
+      - name: Package MSI
+        run: ./gradlew package
+
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: build/installer/Thermals*.msi
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JBR 25
+        run: |
+          curl -L -o jbr.tar.gz https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25.0.4-linux-x64-b508.27.tar.gz
+          mkdir -p ~/.jdks/jbr-25
+          tar -xzf jbr.tar.gz -C ~/.jdks/jbr-25 --strip-components=1
+          echo "JAVA_HOME=$HOME/.jdks/jbr-25" >> $GITHUB_ENV
+          echo "$HOME/.jdks/jbr-25/bin" >> $GITHUB_PATH
+
+      - name: Install appimagetool
+        run: |
+          wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          sudo mv appimagetool-x86_64.AppImage /usr/local/bin/appimagetool
+          sudo apt-get install -y libfuse2
+
+      - name: Build jar
+        run: ./gradlew jar
+
+      - name: Create installer directory
+        run: mkdir -p build/installer
+
+      - name: Package AppImage
+        run: ./gradlew package
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-appimage
+          path: build/installer/Thermals*.AppImage
+
+  release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: artifacts/windows
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-appimage
+          path: artifacts/linux
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Thermals ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/windows/*.msi
+            artifacts/linux/*.AppImage
+          body: |
+            ## Thermals ${{ github.ref_name }}
+
+            ### Downloads
+            - **Windows**: `.msi`
+            - **Linux**: `.AppImage`
+
+            ### Linux usage
+            ```bash
+            chmod +x Thermals*.AppImage
+            ./Thermals*.AppImage
+            ```
