@@ -52,21 +52,20 @@ public class Thermals {
             System.exit(0);
         }
 
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
         if (Platform.isWindows() && !isPawnIOInstalled()) {
-            int result = JOptionPane.showConfirmDialog(
-                null,
+            int result = confirmOnTop(
                 "Thermals uses the PawnIO kernel driver for CPU temperature readings.\n\n" +
                     "Would you like to install it now? (requires administrator privileges)",
-                "Install PawnIO Driver",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
+                "Install PawnIO Driver"
             );
 
             if (result == JOptionPane.YES_OPTION) {
                 Path installer = findPawnIOInstaller();
                 if (installer == null) {
-                    JOptionPane.showMessageDialog(null,
-                        "PawnIO installer not found. Please reinstall Thermals.",
+                    messageOnTop("PawnIO installer not found. Please reinstall Thermals.",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
                     try {
@@ -78,8 +77,7 @@ public class Thermals {
                             "-Wait"
                         }).waitFor();
                     } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null,
-                            "Failed to launch PawnIO installer:\n" + e.getMessage(),
+                        messageOnTop("Failed to launch PawnIO installer:\n" + e.getMessage(),
                             "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -107,6 +105,25 @@ public class Thermals {
         } catch (Exception e) {
             return true;
         }
+    }
+
+    private static int confirmOnTop(String message, String title) {
+        JOptionPane pane = new JOptionPane(message,
+            JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+        JDialog dialog = pane.createDialog(title);
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+        dialog.dispose();
+        Object v = pane.getValue();
+        return (v instanceof Integer) ? (Integer) v : JOptionPane.CLOSED_OPTION;
+    }
+
+    private static void messageOnTop(String message, String title, int type) {
+        JOptionPane pane = new JOptionPane(message, type);
+        JDialog dialog = pane.createDialog(title);
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+        dialog.dispose();
     }
 
     private static boolean isPawnIOInstalled() {
