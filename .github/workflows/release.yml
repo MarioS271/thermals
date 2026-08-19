@@ -25,6 +25,13 @@ jobs:
       - name: Build jar
         run: ./gradlew jar
 
+      - name: Build pawnio-reader
+        run: |
+          cd pawnio-reader
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+          copy build\Release\pawnio-reader.exe ..\resources\windows\
+
       - name: Create installer directory
         run: mkdir -p build/installer
 
