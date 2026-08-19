@@ -53,4 +53,13 @@ public class DiskPanel extends ComponentPanel {
     public Dimension getMaximumSize() {
         return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
     }
+
+    @Override
+    public Dimension getPreferredSize() {
+        int diskHeight = 30; // ik i should NOT hardcode this here but get this: im lazy af :)
+        int padding = 50;
+        int needed = disks.size() * diskHeight + padding;
+        int normal = super.getPreferredSize().height;
+        return new Dimension(super.getPreferredSize().width, Math.max(normal, needed));
+    }
 }
