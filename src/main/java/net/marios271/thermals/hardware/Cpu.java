@@ -18,7 +18,10 @@ public class Cpu {
     private volatile int usagePct;
     private volatile double coreUsage;
     private volatile double clockSpeedGhz;
+
+    private static final double TEMP_SMOOTHING = 0.4;
     private volatile double tempC;
+    private double rawTempC;
 
     private long[] prevUsageTicks;
 
@@ -41,7 +44,7 @@ public class Cpu {
         clockSpeedGhz = Helpers.getAvgOfLongArray(cpu.getCurrentFreq()) / 1_000_000_000.0;
 
         if (Platform.isWindows() && readerData != null) {
-            tempC = readerData.cpuTempC();
+            rawTempC = readerData.cpuTempC();
         }
         else if (Platform.isLinux()) {
             try {
@@ -64,7 +67,7 @@ public class Cpu {
                         if (label.equals("Tdie") || label.startsWith("Package id")) {
                             String inputName = f.getName().replace("_label", "_input");
                             String raw = Files.readString(new File(hwmon, inputName).toPath()).trim();
-                            tempC = Long.parseLong(raw) / 1000.0;
+                            rawTempC = Long.parseLong(raw) / 1000.0;
                             foundTdie = true;
                             break;
                         }
@@ -80,7 +83,7 @@ public class Cpu {
                             String inputName = f.getName().replace("_label", "_input");
                             String raw = Files.readString(new File(hwmon, inputName).toPath()).trim();
 
-                            tempC = Long.parseLong(raw) / 1000.0;
+                            rawTempC = Long.parseLong(raw) / 1000.0;
 
                             break;
                         }
@@ -90,6 +93,7 @@ public class Cpu {
             } catch (Exception _) {}
         }
 
+        tempC = tempC + TEMP_SMOOTHING * (rawTempC - tempC);
         prevUsageTicks = cpu.getSystemCpuLoadTicks();
     }
 
