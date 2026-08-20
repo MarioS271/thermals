@@ -9,6 +9,10 @@ public class Stat extends JPanel {
     JLabel valueLabel;
 
     public Stat(String _value, String _valueSuffix, String _statName) {
+        this(_value, _valueSuffix, _statName, null);
+    }
+
+    public Stat(String _value, String _valueSuffix, String _statName, Color _valueColor) {
         super(new GridBagLayout());
         setBackground(UICommons.PANEL_BACKGROUND_COLOR);
 
@@ -20,6 +24,8 @@ public class Stat extends JPanel {
         JLabel nameLabel = new JLabel(_statName);
         nameLabel.setForeground(Color.GRAY);
         nameLabel.setFont(nameLabel.getFont().deriveFont(11f));
+        if (_valueColor != null)
+            nameLabel.setForeground(_valueColor);
 
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.WEST;

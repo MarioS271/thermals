@@ -38,12 +38,14 @@ public class GpuPanel extends ComponentPanel {
         usageStat = new Stat(
             Integer.toString((int)gpu.getUsagePct()),
             "%",
-            "Usage"
+            "Usage",
+            usagePctColor
         );
         tempStat = new Stat(
             Helpers.doubleAsSinglePrecisionString(gpu.getTempC()),
             "°C",
-            "Temp"
+            "Temp",
+            tempCColor
         );
         vramUsedStat = new Stat(
             Helpers.doubleAsSinglePrecisionString(gpu.getVramUsedGbOneTenth()),

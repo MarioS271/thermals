@@ -35,7 +35,8 @@ public class CpuPanel extends ComponentPanel {
         usageStat = new Stat(
             Integer.toString(hwManager.cpu().getCpuUsagePct()),
             "%",
-            "Usage"
+            "Usage",
+            usagePctColor
         );
         coresUsageStat = new Stat(
             Helpers.doubleAsSinglePrecisionString(hwManager.cpu().getCpuCoreUsage()),
@@ -50,7 +51,8 @@ public class CpuPanel extends ComponentPanel {
         tempStat = new Stat(
             hwManager.cpu().getTempCFormatted(),
             "°C",
-            "Temperature"
+            "Temperature",
+            tempCColor
         );
 
         JPanel stats = new JPanel();
