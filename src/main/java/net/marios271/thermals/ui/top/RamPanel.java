@@ -64,7 +64,7 @@ public class RamPanel extends ComponentPanel {
         main.setBorder(UICommons.uniformPadding(UICommons.PANEL_MAIN_SECTION_PADDING));
         main.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         main.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-        main.add(new Graph(dataset, Color.BLUE, ram.getCapacityGb()));
+        main.add(new Graph(dataset, Color.BLUE));
         main.add(stats);
 
         add(main, BorderLayout.CENTER);
@@ -73,14 +73,14 @@ public class RamPanel extends ComponentPanel {
     public void update() {
         Ram ram = hwManager.ram();
 
-        final double usedGb = ram.getUsedGb();
+        final double usedPct = ram.getUsedPct();
 
         if (datasetCurrentCol >= UICommons.MAX_GRAPH_DATASET_SIZE)
             dataset.removeColumn(0);
 
         ++datasetCurrentCol;
 
-        dataset.addValue((Number)usedGb, "ram", datasetCurrentCol);
+        dataset.addValue((Number)usedPct, "usedPct", datasetCurrentCol);
 
         usedStat.setValue(Helpers.doubleAsSinglePrecisionString(ram.getUsedGb()));
         if (!Platform.isWindows()) cachedStat.setValue(Helpers.doubleAsSinglePrecisionString(ram.getCachedGb()));

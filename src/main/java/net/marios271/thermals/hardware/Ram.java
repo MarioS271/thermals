@@ -16,6 +16,7 @@ public class Ram {
     private int speedMhz;
     private String type;
 
+    private volatile int usedPct;
     private volatile double usedGb;
     private volatile double cachedGb;
     private volatile double freeGb;
@@ -43,6 +44,7 @@ public class Ram {
         long available = mem.getAvailable();
         long used = total - available;
 
+        usedPct = (int)((used * 100) / total);
         usedGb = used / 1_073_741_824.0;
         freeGb = available / 1_073_741_824.0;
         cachedGb = getCachedMem();
@@ -72,6 +74,9 @@ public class Ram {
         return type;
     }
 
+    public int getUsedPct() {
+        return usedPct;
+    }
     public double getUsedGb() {
         return usedGb;
     }
