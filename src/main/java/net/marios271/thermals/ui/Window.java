@@ -23,9 +23,7 @@ public class Window implements HwUpdateListener{
 
         @Override
         public void windowClosing(WindowEvent e) {
-            e.getWindow().dispose();
-            if (!TrayManager.isSupported())
-                System.exit(0);
+            System.exit(0);
         }
 
         @Override
@@ -34,7 +32,10 @@ public class Window implements HwUpdateListener{
         }
 
         @Override
-        public void windowIconified(WindowEvent e) {}
+        public void windowIconified(WindowEvent e) {
+            if (TrayManager.isSupported())
+                e.getWindow().dispose();
+        }
 
         @Override
         public void windowDeiconified(WindowEvent e) {}

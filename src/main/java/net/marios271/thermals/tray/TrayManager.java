@@ -1,5 +1,6 @@
 package net.marios271.thermals.tray;
 
+import net.marios271.thermals.Helpers;
 import net.marios271.thermals.hardware.Gpu;
 import net.marios271.thermals.hardware.HwManager;
 import net.marios271.thermals.ui.Window;
@@ -59,14 +60,14 @@ public class TrayManager {
     }
 
     static PopupMenu buildMenu() {
-        MenuItem openWindow = new MenuItem("Open Popup Window");
-        openWindow.addActionListener(e -> Window.init(hwManager));
+        MenuItem open = new MenuItem("Open");
+        open.addActionListener(e -> Window.init(hwManager));
 
         MenuItem exit = new MenuItem("Exit");
         exit.addActionListener(e -> System.exit(0));
 
         PopupMenu menu = new PopupMenu();
-        menu.add(openWindow);
+        menu.add(open);
         menu.add(exit);
 
         return menu;
@@ -79,7 +80,11 @@ public class TrayManager {
         double gpuTemp = count > 0 ? total / count : 0;
 
         icon.setImage(TrayIconDrawer.draw(cpuTemp, sysTray.getTrayIconSize()));
-        icon.setToolTip("Thermals\n\nCPU: " + cpuTemp + " °C\nGPU: " + gpuTemp + " °C");
+        icon.setToolTip(
+            "Thermals\n\n" +
+            "CPU: " + Helpers.doubleAsSinglePrecisionString(cpuTemp) + " °C\n" +
+            "GPU: " + Helpers.doubleAsSinglePrecisionString(gpuTemp) + " °C"
+        );
     }
 
     public static boolean isSupported() {
