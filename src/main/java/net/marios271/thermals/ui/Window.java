@@ -26,11 +26,12 @@ public class Window {
         @Override
         public void windowClosed(WindowEvent e) {
             frame = null;
+            started = false;
         }
 
         @Override
         public void windowIconified(WindowEvent e) {
-            if (TrayManager.isSupported())
+            if (TrayManager.isSupported() && started)
                 e.getWindow().dispose();
         }
 
@@ -49,7 +50,7 @@ public class Window {
     private static MiddlePanel middlePanel = null;
     private static BottomPanel bottomPanel = null;
 
-    static HwManager hwManager;
+    private static boolean started = false;
 
     public static void init() {
         FlatDarkLaf.setup();
