@@ -18,7 +18,7 @@ public class TrayManager {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1)
-                Window.init();
+                Window.open();
         }
 
         @Override
@@ -58,7 +58,7 @@ public class TrayManager {
 
     static PopupMenu buildMenu() {
         MenuItem open = new MenuItem("Open");
-        open.addActionListener(e -> Window.init());
+        open.addActionListener(e -> Window.open());
 
         MenuItem exit = new MenuItem("Exit");
         exit.addActionListener(e -> System.exit(0));
@@ -72,8 +72,12 @@ public class TrayManager {
 
     public static void onHwUpdate() {
         double cpuTemp = HwManager.cpu().getTempC();
-        double total = 0; int count = 0;
-        for (Gpu gpu : HwManager.gpus()) { total += gpu.getTempC(); count++; }
+        double total = 0;
+        int count = 0;
+
+        for (Gpu gpu : HwManager.gpus())
+            total += gpu.getTempC(); count++;
+
         double gpuTemp = count > 0 ? total / count : 0;
 
         icon.setImage(TrayIconDrawer.draw(cpuTemp, sysTray.getTrayIconSize()));

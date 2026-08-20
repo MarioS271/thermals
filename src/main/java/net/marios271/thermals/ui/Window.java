@@ -14,8 +14,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class Window {
-    static Window instance = null;
-
     static WindowListener windowListener = new WindowListener() {
         @Override
         public void windowOpened(WindowEvent e) {}
@@ -46,10 +44,10 @@ public class Window {
         public void windowDeactivated(WindowEvent e) {}
     };
 
-    static JFrame frame = null;
-    static TopPanel topPanel = null;
-    static MiddlePanel middlePanel = null;
-    static BottomPanel bottomPanel = null;
+    private static JFrame frame = null;
+    private static TopPanel topPanel = null;
+    private static MiddlePanel middlePanel = null;
+    private static BottomPanel bottomPanel = null;
 
     static HwManager hwManager;
 
@@ -64,6 +62,20 @@ public class Window {
             return;
 
         HwManager.addUpdateListener(Window::onHwUpdate);
+
+        open();
+    }
+
+    public static void open() {
+        if (frame != null) {
+            SwingUtilities.invokeLater(() -> {
+                frame.setExtendedState(Frame.NORMAL);
+                frame.setVisible(true);
+                frame.toFront();
+                frame.requestFocus();
+            });
+            return;
+        }
 
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Thermals");
@@ -97,6 +109,8 @@ public class Window {
             frame.toFront();
             frame.requestFocus();
             frame.setAlwaysOnTop(false);
+
+            started = true;
         });
     }
 
