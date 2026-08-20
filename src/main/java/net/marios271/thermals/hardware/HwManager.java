@@ -27,7 +27,8 @@ public class HwManager {
 
     private static final Set<String> IGNORED_FS_TYPES = Set.of(
         "tmpfs", "devtmpfs", "sysfs", "proc", "cgroup",
-        "cgroup2", "pstore", "none", "overlay", "squashfs"
+        "cgroup2", "pstore", "none", "overlay", "squashfs",
+        "fuse", "fuseblk", "fuse.squashfuse", "squashfuse"
     );
 
     private static final List<Runnable> listeners = new ArrayList<>();
