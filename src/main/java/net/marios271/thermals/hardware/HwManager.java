@@ -27,9 +27,17 @@ public class HwManager {
 
     private static final Set<String> IGNORED_FS_TYPES = Set.of(
         "tmpfs", "devtmpfs", "sysfs", "proc", "cgroup",
-        "cgroup2", "pstore", "none", "overlay", "squashfs",
-        "fuse", "fuseblk", "fuse.squashfuse", "squashfuse"
+        "cgroup2", "pstore", "none", "squashfs"
     );
+
+    private static boolean isIgnoredFileStore(OSFileStore fs) {
+        String name = fs.getName() == null ? "" : fs.getName().toLowerCase();
+        if (name.endsWith(".appimage"))
+            return true;
+
+        String type = fs.getType() == null ? "" : fs.getType().toLowerCase();
+        return IGNORED_FS_TYPES.contains(type);
+    }
 
     private static final List<Runnable> listeners = new ArrayList<>();
 
@@ -61,7 +69,7 @@ public class HwManager {
         for (int i = 0; i < numGpus; ++i)
             gpus.add(new Gpu().init(readerData, i));
         for (OSFileStore fileStore : sysInfo.getOperatingSystem().getFileSystem().getFileStores()) {
-            if (Platform.isLinux() && IGNORED_FS_TYPES.contains(fileStore.getType()))
+            if (Platform.isLinux() && isIgnoredFileStore(fileStore))
                 continue;
             disks.add(new Disk().init(fileStore));
         }
