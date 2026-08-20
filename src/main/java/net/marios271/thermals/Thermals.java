@@ -19,42 +19,16 @@ public class Thermals {
     private static FileChannel lockChannel;
     private static FileLock lockHandle;
 
-    private static String getJarPath() {
-        // thisll fail in dev; if ur testing this u need to start the ide as admin
-        try {
-            return Thermals.class.getProtectionDomain()
-                .getCodeSource().getLocation().toURI().getPath();
-        } catch (Exception e) {
-            PopupMessage.createErrPopup("Could not find .jar file to start as admin");
-            System.err.println("Could not find .jar file to start as admin");
-            System.exit(1);
-        }
-        return null;
-    }
-
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {}
 
-        if (Platform.isWindows() && !Platform.isAdminWindows()) {
-            String exePath = System.getProperty("jpackage.app-path");
-            if (exePath == null) {
-                exePath = ProcessHandle.current().info().command().orElse(null);
-            }
-            try {
-                if (exePath != null) {
-                    new ProcessBuilder("powershell", "-Command",
-                        "Start-Process '" + exePath + "' -Verb RunAs")
-                        .start();
-                }
-            } catch (Exception ignored) {}
-            System.exit(0);
-        }
+        if (Platform.isWindows() && !Platform.isAdminWindows())
+            restartAsAdmin();
 
-        if (!lockInstance()) {
+        if (!lockInstance())
             System.exit(0);
-        }
 
         if (Platform.isWindows() && !isPawnIOInstalled()) {
             int result = PopupMessage.createConfirmPopup(
@@ -89,16 +63,33 @@ public class Thermals {
         TrayManager.start(hwManager);
     }
 
+    private static void restartAsAdmin() {
+        String exePath = System.getProperty("jpackage.app-path");
+        if (exePath == null) {
+            exePath = ProcessHandle.current().info().command().orElse(null);
+        }
+        try {
+            if (exePath != null) {
+                new ProcessBuilder("powershell", "-Command",
+                    "Start-Process '" + exePath + "' -Verb RunAs")
+                    .start();
+            }
+        } catch (Exception ignored) {}
+        System.exit(0);
+    }
+
     private static boolean lockInstance() {
         try {
             Path lockPath = Path.of(System.getProperty("java.io.tmpdir"), "thermals.lock");
-            lockChannel = FileChannel.open(lockPath,
-                StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+            lockChannel = FileChannel.open(lockPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
             lockHandle = lockChannel.tryLock();
+
             if (lockHandle == null) {
                 lockChannel.close();
                 return false;
             }
+
             return true;
         } catch (Exception e) {
             return true;
@@ -111,6 +102,7 @@ public class Thermals {
                 new String[]{"sc", "query", "PawnIO"}
             );
             check.waitFor();
+
             return check.exitValue() == 0;
         } catch (Exception e) {
             return false;
