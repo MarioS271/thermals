@@ -35,9 +35,6 @@ tasks.test {
 
 val mainClassName = "net.marios271.thermals.Thermals"
 
-// Self-contained ("fat") jar: bundles every runtime dependency so the packaged
-// app has a complete classpath. The previous thin jar was why the elevated
-// instance died once it tried to load OSHI/JNA/FlatLaf/etc.
 tasks.jar {
     manifest {
         attributes["Main-Class"] = mainClassName
@@ -49,10 +46,6 @@ tasks.jar {
     exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "module-info.class")
 }
 
-// ---- Packaging ------------------------------------------------------------
-// Two stages: build a jpackage "app-image", then wrap it (MSI on Windows,
-// AppImage on Linux). The JBR is bundled directly as the runtime image so the
-// app ships with the JetBrains runtime (needed for WLToolkit on Wayland).
 
 val jbrHome = System.getenv("JAVA_HOME") ?: System.getProperty("java.home")
 
@@ -64,8 +57,6 @@ tasks.register<Exec>("appImage") {
     val isLinux = os.contains("linux")
 
     doFirst {
-        // On Windows, bundle the PawnIO driver + reader (placed in build/libs by CI)
-        // so they land next to the jar inside the app directory.
         if (isWindows) {
             copy {
                 from("resources/windows")
@@ -95,10 +86,7 @@ tasks.register<Exec>("package") {
 
     val os = System.getProperty("os.name").lowercase()
 
-    doFirst {
-        delete("build/installer")
-        mkdir("build/installer")
-    }
+    doFirst { delete("build/installer"); mkdir("build/installer") }
 
     if (os.contains("win")) {
         commandLine(
@@ -138,6 +126,14 @@ tasks.register<Exec>("package") {
                     "exec \"\$JAVA_BIN\" -Dawt.toolkit.name=WLToolkit"
                 )
             )
+
+            val appRun = file("build/package/Thermals/AppRun")
+            appRun.writeText(
+                "#!/bin/sh\n" +
+                        "HERE=\"\$(dirname \"\$(readlink -f \"\$0\")\")\"\n" +
+                        "exec \"\$HERE/bin/Thermals\" \"\$@\"\n"
+            )
+            appRun.setExecutable(true)
         }
 
         commandLine(
