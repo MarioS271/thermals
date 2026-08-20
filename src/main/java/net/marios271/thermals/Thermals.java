@@ -33,6 +33,10 @@ public class Thermals {
     }
 
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
+
         if (Platform.isWindows() && !Platform.isAdminWindows()) {
             String exePath = System.getProperty("jpackage.app-path");
             if (exePath == null) {
@@ -52,21 +56,16 @@ public class Thermals {
             System.exit(0);
         }
 
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {}
         if (Platform.isWindows() && !isPawnIOInstalled()) {
-            int result = confirmOnTop(
-                "Thermals uses the PawnIO kernel driver for CPU temperature readings.\n\n" +
-                    "Would you like to install it now? (requires administrator privileges)",
-                "Install PawnIO Driver"
+            int result = PopupMessage.createConfirmPopup(
+                "Thermals uses the PawnIO kernel driver for CPU temperature readings.\n" +
+                "Would you like to install it now? (requires administrator privileges)"
             );
 
             if (result == JOptionPane.YES_OPTION) {
                 Path installer = findPawnIOInstaller();
                 if (installer == null) {
-                    messageOnTop("PawnIO installer not found. Please reinstall Thermals.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                    PopupMessage.createWarnPopup("PawnIO installer not found. Please reinstall Thermals.");
                 } else {
                     try {
                         Runtime.getRuntime().exec(new String[]{
@@ -77,8 +76,7 @@ public class Thermals {
                             "-Wait"
                         }).waitFor();
                     } catch (Exception e) {
-                        messageOnTop("Failed to launch PawnIO installer:\n" + e.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                        PopupMessage.createWarnPopup("Failed to launch PawnIO installer:\n" + e.getMessage());
                     }
                 }
             }
@@ -105,25 +103,6 @@ public class Thermals {
         } catch (Exception e) {
             return true;
         }
-    }
-
-    private static int confirmOnTop(String message, String title) {
-        JOptionPane pane = new JOptionPane(message,
-            JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
-        JDialog dialog = pane.createDialog(title);
-        dialog.setAlwaysOnTop(true);
-        dialog.setVisible(true);
-        dialog.dispose();
-        Object v = pane.getValue();
-        return (v instanceof Integer) ? (Integer) v : JOptionPane.CLOSED_OPTION;
-    }
-
-    private static void messageOnTop(String message, String title, int type) {
-        JOptionPane pane = new JOptionPane(message, type);
-        JDialog dialog = pane.createDialog(title);
-        dialog.setAlwaysOnTop(true);
-        dialog.setVisible(true);
-        dialog.dispose();
     }
 
     private static boolean isPawnIOInstalled() {
