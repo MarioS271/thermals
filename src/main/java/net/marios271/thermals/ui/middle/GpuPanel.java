@@ -13,6 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GpuPanel extends ComponentPanel {
+    private static final Color usagePctColor = Color.GREEN;
+    private static final Color tempCColor = new Color(180, 255, 180);
+
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     int datasetCurrentCol = 0;
 
@@ -61,7 +64,7 @@ public class GpuPanel extends ComponentPanel {
         main.setBorder(UICommons.uniformPadding(UICommons.PANEL_MAIN_SECTION_PADDING));
         main.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         main.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-        main.add(new Graph(dataset, Color.GREEN));
+        main.add(new Graph(dataset, usagePctColor, tempCColor));
         main.add(stats);
 
         add(main, BorderLayout.CENTER);
@@ -71,16 +74,18 @@ public class GpuPanel extends ComponentPanel {
         Gpu gpu = hwManager.gpus().get(gpuIndex);
 
         final int usagePct = (int)gpu.getUsagePct();
+        final double tempC = gpu.getTempC();
 
         if (datasetCurrentCol >= UICommons.MAX_GRAPH_DATASET_SIZE)
             dataset.removeColumn(0);
 
         ++datasetCurrentCol;
 
-        dataset.addValue((Number)usagePct, "gpu", datasetCurrentCol);
+        dataset.addValue((Number)usagePct, "usagePct", datasetCurrentCol);
+        dataset.addValue((Number)tempC, "tempC", datasetCurrentCol);
 
         usageStat.setValue(Integer.toString(usagePct));
-        tempStat.setValue(Helpers.doubleAsSinglePrecisionString(gpu.getTempC()));
+        tempStat.setValue(Helpers.doubleAsSinglePrecisionString(tempC));
         vramUsedStat.setValue(Helpers.doubleAsSinglePrecisionString(gpu.getVramUsedGbOneTenth()));
     }
 }

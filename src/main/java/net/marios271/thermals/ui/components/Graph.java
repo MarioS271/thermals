@@ -15,11 +15,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import java.awt.*;
 
 public class Graph extends ChartPanel {
-    public Graph(DefaultCategoryDataset _dataset, Color _chartColor) {
-        this(_dataset, _chartColor, 100.0);
-    }
-
-    public Graph(DefaultCategoryDataset _dataset, Color _chartColor, double rangeUpper) {
+    public Graph(DefaultCategoryDataset _dataset, Color... _chartColors) {
         JFreeChart chart = ChartFactory.createLineChart(
             null,
             null,
@@ -42,7 +38,7 @@ public class Graph extends ChartPanel {
         plot.setRangeGridlinePaint(UICommons.GRAPH_GRID_LINE_COLOR);
         plot.setDomainGridlinesVisible(false);
 
-        rangeAxis.setRange(0.0, rangeUpper);
+        rangeAxis.setRange(0.0, 100.0);
         rangeAxis.setAxisLinePaint(UICommons.PANEL_BACKGROUND_COLOR);
         domainAxis.setVisible(false);
 
@@ -50,7 +46,9 @@ public class Graph extends ChartPanel {
         renderer.setAutoPopulateSeriesStroke(false);
         renderer.setAutoPopulateSeriesPaint(false);
         renderer.setDefaultStroke(new BasicStroke(2.0f));
-        renderer.setDefaultPaint(_chartColor);
+        renderer.setDefaultPaint(_chartColors[0]);
+        for (int i = 0; i < _chartColors.length; ++i)
+            renderer.setSeriesPaint(i, _chartColors[i]);
 
         super(chart);
         setBackground(UICommons.PANEL_BACKGROUND_COLOR);

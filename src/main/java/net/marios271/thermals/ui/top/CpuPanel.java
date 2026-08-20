@@ -13,6 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CpuPanel extends ComponentPanel {
+    private static final Color usagePctColor = Color.RED;
+    private static final Color tempCColor = new Color(255, 150, 150);
+
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     int datasetCurrentCol = 0;
 
@@ -64,7 +67,7 @@ public class CpuPanel extends ComponentPanel {
         main.setBorder(UICommons.uniformPadding(UICommons.PANEL_MAIN_SECTION_PADDING));
         main.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         main.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-        main.add(new Graph(dataset, Color.RED));
+        main.add(new Graph(dataset, usagePctColor, tempCColor));
         main.add(stats);
 
         add(main, BorderLayout.CENTER);
@@ -74,13 +77,15 @@ public class CpuPanel extends ComponentPanel {
         Cpu cpu = hwManager.cpu();
 
         final int usagePct = cpu.getCpuUsagePct();
+        final double tempC = cpu.getTempC();
 
         if (datasetCurrentCol >= UICommons.MAX_GRAPH_DATASET_SIZE)
             dataset.removeColumn(0);
 
         ++datasetCurrentCol;
 
-        dataset.addValue((Number)usagePct, "cpu", datasetCurrentCol);
+        dataset.addValue((Number)usagePct, "usagePct", datasetCurrentCol);
+        dataset.addValue((Number)tempC, "tempC", datasetCurrentCol);
 
         usageStat.setValue(Integer.toString(usagePct));
         coresUsageStat.setValue(Helpers.doubleAsSinglePrecisionString(cpu.getCpuCoreUsage()));
