@@ -14,6 +14,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class Window {
+    private static long shownAt = 0;
+
     static WindowListener windowListener = new WindowListener() {
         @Override
         public void windowOpened(WindowEvent e) {}
@@ -26,12 +28,11 @@ public class Window {
         @Override
         public void windowClosed(WindowEvent e) {
             frame = null;
-            started = false;
         }
 
         @Override
         public void windowIconified(WindowEvent e) {
-            if (TrayManager.isSupported() && started)
+            if (TrayManager.isSupported() && System.currentTimeMillis() - shownAt > 1000)
                 e.getWindow().dispose();
         }
 
@@ -50,17 +51,12 @@ public class Window {
     private static MiddlePanel middlePanel = null;
     private static BottomPanel bottomPanel = null;
 
-    private static boolean started = false;
-
     public static void init() {
         FlatDarkLaf.setup();
         UIManager.put("ScrollBar.thumbArc", 999);
         UIManager.put("ScrollBar.track", UICommons.WINDOW_BACKGROUND_COLOR);
         UIManager.put("ScrollBar.hoverTrackColor", UICommons.WINDOW_BACKGROUND_COLOR);
         UIManager.put("ScrollBar.thumbInsets", new Insets(0, 2, 0, 0));
-
-        if (frame != null)
-            return;
 
         HwManager.addUpdateListener(Window::onHwUpdate);
 
@@ -105,13 +101,10 @@ public class Window {
 
             frame.add(scroll);
             frame.setVisible(true);
-            frame.setExtendedState(frame.getExtendedState() & ~Frame.ICONIFIED);
-            frame.setAlwaysOnTop(true);
             frame.toFront();
             frame.requestFocus();
-            frame.setAlwaysOnTop(false);
 
-            started = true;
+            shownAt = System.currentTimeMillis();
         });
     }
 
