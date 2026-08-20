@@ -46,7 +46,6 @@ tasks.jar {
     exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "module-info.class")
 }
 
-
 val jbrHome = System.getenv("JAVA_HOME") ?: System.getProperty("java.home")
 
 tasks.register<Exec>("appImage") {
@@ -116,15 +115,6 @@ tasks.register<Exec>("package") {
                 Type=Application
                 Categories=System;Monitor;
                 """.trimIndent()
-            )
-
-            // Force the JetBrains Wayland toolkit for the packaged launcher.
-            val launcher = file("build/package/Thermals/bin/Thermals")
-            launcher.writeText(
-                launcher.readText().replace(
-                    "exec \"\$JAVA_BIN\"",
-                    "exec \"\$JAVA_BIN\" -Dawt.toolkit.name=WLToolkit"
-                )
             )
 
             val appRun = file("build/package/Thermals/AppRun")
