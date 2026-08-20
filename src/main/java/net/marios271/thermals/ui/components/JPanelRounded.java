@@ -6,12 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class JPanelRounded extends JPanel {
-    int _borderRadius;
+    private int _borderRadius;
 
-    public JPanelRounded() {
-        super(new FlowLayout());
-        setOpaque(false);
-    }
     public JPanelRounded(LayoutManager layout) {
         super(layout);
         setOpaque(false);

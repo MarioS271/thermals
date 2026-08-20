@@ -39,7 +39,10 @@ public class Thermals {
             if (result == JOptionPane.YES_OPTION) {
                 Path installer = findPawnIOInstaller();
                 if (installer == null) {
-                    PopupMessage.createWarnPopup("PawnIO installer not found. Please reinstall Thermals.");
+                    PopupMessage.createWarnPopup(
+                        "PawnIO installer not found. Please reinstall Thermals " +
+                        "or download the PawnIO driver manually at https://pawnio.eu"
+                    );
                 } else {
                     try {
                         Runtime.getRuntime().exec(new String[]{
@@ -50,17 +53,15 @@ public class Thermals {
                             "-Wait"
                         }).waitFor();
                     } catch (Exception e) {
-                        PopupMessage.createWarnPopup("Failed to launch PawnIO installer:\n" + e.getMessage());
+                        PopupMessage.createErrPopup("Failed to launch PawnIO installer:\n" + e.getMessage());
                     }
                 }
             }
         }
 
-        HwManager hwManager = new HwManager();
-        hwManager.init();
-
-        Window.init(hwManager);
-        TrayManager.start(hwManager);
+        HwManager.init();
+        Window.init();
+        TrayManager.init();
     }
 
     private static void restartAsAdmin() {

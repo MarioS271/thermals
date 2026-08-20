@@ -16,7 +16,6 @@ public class Gpu {
     private volatile long vramUsedMb;
     private volatile long vramTotalMb;
 
-    private Process nvidiaSmiProcess;
     private boolean isNvidia = false;
     private String amdHwmonPath = null;
 
@@ -36,7 +35,7 @@ public class Gpu {
         }
     }
 
-    public Gpu init(HwManager _hwManager, SensorData readerData, int _gpuIndex) {
+    public Gpu init(SensorData readerData, int _gpuIndex) {
         gpuIndex = _gpuIndex;
 
         if (Platform.isWindows()) {

@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class DiskPanel extends ComponentPanel {
-    ArrayList<Disk> disks = new ArrayList<>();
+    private ArrayList<Disk> disks = new ArrayList<>();
 
-    public DiskPanel(HwManager hwManager) {
+    public DiskPanel() {
         super("Disks");
 
         setMinimumSize(UICommons.DEFAULT_PANEL_SIZE);
@@ -23,7 +23,7 @@ public class DiskPanel extends ComponentPanel {
         container.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         container.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-        for (net.marios271.thermals.hardware.Disk hwDisk : hwManager.disks()) {
+        for (net.marios271.thermals.hardware.Disk hwDisk : HwManager.disks()) {
             Disk disk = new Disk(hwDisk.getName(), hwDisk.getTotalGb(), hwDisk.getMountpoint(),
                 (int)hwDisk.getUsedPct(), hwDisk.getUsedGb(), hwDisk.getReadMBs(), hwDisk.getWriteMBs());
             disks.add(disk);

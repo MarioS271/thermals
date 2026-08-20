@@ -23,14 +23,14 @@ public class Disk {
     private long prevWriteBytes;
     private long prevTimestamp;
 
-    public Disk init(HwManager _hwManager, OSFileStore _fileStore) {
+    public Disk init(OSFileStore _fileStore) {
         fileStore = _fileStore;
 
         name = _fileStore.getName();
         mountpoint = _fileStore.getMount();
         totalGb = _fileStore.getTotalSpace() / 1_073_741_824L;
 
-        diskStore = findParentDisk(_hwManager.hal().getDiskStores(), _fileStore);
+        diskStore = findParentDisk(HwManager.hal().getDiskStores(), _fileStore);
 
         if (diskStore != null) {
             prevReadBytes = diskStore.getReadBytes();
@@ -77,26 +77,12 @@ public class Disk {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-    public String getMountpoint() {
-        return mountpoint;
-    }
-    public long getTotalGb() {
-        return totalGb;
-    }
+    public String getName() { return name; }
+    public String getMountpoint() { return mountpoint; }
+    public long getTotalGb() { return totalGb; }
 
-    public double getUsedPct() {
-        return usedPct;
-    }
-    public long getUsedGb() {
-        return usedGb;
-    }
-    public double getReadMBs() {
-        return readMBs;
-    }
-    public double getWriteMBs() {
-        return writeMBs;
-    }
+    public double getUsedPct() { return usedPct; }
+    public long getUsedGb() { return usedGb; }
+    public double getReadMBs() { return readMBs; }
+    public double getWriteMBs() { return writeMBs; }
 }

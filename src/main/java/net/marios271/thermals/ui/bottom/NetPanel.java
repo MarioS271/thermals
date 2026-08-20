@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class NetPanel extends ComponentPanel {
-    ArrayList<NetAdapter> adapters = new ArrayList<>();
+    private ArrayList<NetAdapter> adapters = new ArrayList<>();
 
-    public NetPanel(HwManager hwManager) {
+    public NetPanel() {
         super("Network Adapters");
 
         setMinimumSize(UICommons.DEFAULT_PANEL_SIZE);
@@ -24,7 +24,7 @@ public class NetPanel extends ComponentPanel {
         container.setBackground(UICommons.PANEL_BACKGROUND_COLOR);
         container.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-        for (Net net : hwManager.nets()) {
+        for (Net net : HwManager.nets()) {
             NetAdapter adapter = new NetAdapter(
                 net.getName(),
                 (int)net.getDownloadMBs(),

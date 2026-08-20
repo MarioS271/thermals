@@ -7,17 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Disk extends BaseBottomEntry {
-    final int GAP = 20;
-    final char UP_ARROW = '↑';
-    final char DOWN_ARROW = '↓';
+    private final int GAP = 20;
+    private final char UP_ARROW = '↑';
+    private final char DOWN_ARROW = '↓';
 
-    long _totalGb;
+    private long _totalGb;
 
-    JLabel _usageTextGb;
-    JLabel _usageText;
-    PercentageBar _usageBar;
-    UpDownLabel _readRate;
-    UpDownLabel _writeRate;
+    private JLabel _usageTextGb;
+    private JLabel _usageText;
+    private PercentageBar _usageBar;
+    private UpDownLabel _readRate;
+    private UpDownLabel _writeRate;
 
     public Disk(String diskName, long totalGb, String mountpoint, int usedPct, long usedGb, double readMBs, double writeMBs) {
         String name = diskName + " (" + mountpoint + ")";

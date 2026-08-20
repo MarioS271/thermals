@@ -3,7 +3,6 @@ package net.marios271.thermals.ui;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarkLaf;
 import net.marios271.thermals.hardware.HwManager;
-import net.marios271.thermals.hardware.HwUpdateListener;
 import net.marios271.thermals.tray.TrayManager;
 import net.marios271.thermals.ui.bottom.BottomPanel;
 import net.marios271.thermals.ui.middle.MiddlePanel;
@@ -14,7 +13,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class Window implements HwUpdateListener{
+public class Window {
     static Window instance = null;
 
     static WindowListener windowListener = new WindowListener() {
@@ -54,7 +53,7 @@ public class Window implements HwUpdateListener{
 
     static HwManager hwManager;
 
-    public static void init(HwManager _hwManager) {
+    public static void init() {
         FlatDarkLaf.setup();
         UIManager.put("ScrollBar.thumbArc", 999);
         UIManager.put("ScrollBar.track", UICommons.WINDOW_BACKGROUND_COLOR);
@@ -64,12 +63,7 @@ public class Window implements HwUpdateListener{
         if (frame != null)
             return;
 
-        hwManager = _hwManager;
-
-        if (instance == null) {
-            instance = new Window();
-            hwManager.addUpdateListener(instance);
-        }
+        HwManager.addUpdateListener(Window::onHwUpdate);
 
         SwingUtilities.invokeLater(() -> {
             frame = new JFrame("Thermals");
@@ -80,9 +74,9 @@ public class Window implements HwUpdateListener{
             frame.addWindowListener(windowListener);
             frame.getRootPane().putClientProperty(FlatClientProperties.TITLE_BAR_BACKGROUND, UICommons.WINDOW_BACKGROUND_COLOR);
 
-            topPanel = new TopPanel(hwManager);
-            middlePanel = new MiddlePanel(hwManager);
-            bottomPanel = new BottomPanel(hwManager);
+            topPanel = new TopPanel();
+            middlePanel = new MiddlePanel();
+            bottomPanel = new BottomPanel();
 
             JPanel main = new JPanel();
             main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
@@ -106,8 +100,7 @@ public class Window implements HwUpdateListener{
         });
     }
 
-    @Override
-    public void onHwUpdate() {
+    public static void onHwUpdate() {
         if (frame == null) return;
         SwingUtilities.invokeLater(() -> {
             if (topPanel != null) topPanel.update();

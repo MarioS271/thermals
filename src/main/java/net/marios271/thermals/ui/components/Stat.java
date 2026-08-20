@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Stat extends JPanel {
-    JLabel valueLabel;
+    private JLabel valueLabel;
 
     public Stat(String _value, String _valueSuffix, String _statName) {
         this(_value, _valueSuffix, _statName, null);

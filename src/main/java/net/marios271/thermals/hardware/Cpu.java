@@ -25,9 +25,8 @@ public class Cpu {
 
     private long[] prevUsageTicks;
 
-    public Cpu init(HwManager _manager) {
-        manager = _manager;
-        cpu = manager.hal().getProcessor();
+    public Cpu init() {
+        cpu = HwManager.hal().getProcessor();
 
         processorName = cpu.getProcessorIdentifier().getName();
         logicalCores = cpu.getLogicalProcessorCount();
@@ -97,26 +96,11 @@ public class Cpu {
         prevUsageTicks = cpu.getSystemCpuLoadTicks();
     }
 
-    public String getCpuName() {
-        return processorName;
-    }
-    public int getLogicalCores() {
-        return logicalCores;
-    }
-
-    public int getCpuUsagePct() {
-        return usagePct;
-    }
-    public double getCpuCoreUsage() {
-        return coreUsage;
-    }
-    public double getClockSpeedGhz() {
-        return clockSpeedGhz;
-    }
-    public double getTempC() {
-        return tempC;
-    }
-    public String getTempCFormatted() {
-        return tempC < 0 ? "N/A" : Helpers.doubleAsSinglePrecisionString(tempC);
-    }
+    public String getCpuName() { return processorName; }
+    public int getLogicalCores() { return logicalCores; }
+    public int getCpuUsagePct() { return usagePct; }
+    public double getCpuCoreUsage() { return coreUsage; }
+    public double getClockSpeedGhz() { return clockSpeedGhz; }
+    public double getTempC() { return tempC; }
+    public String getTempCFormatted() { return tempC < 0 ? "N/A" : Helpers.doubleAsSinglePrecisionString(tempC); }
 }

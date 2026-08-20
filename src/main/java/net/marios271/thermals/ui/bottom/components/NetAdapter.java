@@ -6,12 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class NetAdapter extends BaseBottomEntry {
-    final int GAP = 10;
-    final char UP_ARROW = '↑';
-    final char DOWN_ARROW = '↓';
+    private final int GAP = 10;
+    private final char UP_ARROW = '↑';
+    private final char DOWN_ARROW = '↓';
 
-    UpDownLabel _download;
-    UpDownLabel _upload;
+    private UpDownLabel _download;
+    private UpDownLabel _upload;
 
     public NetAdapter(String adapterName, int readRate, int writeRate) {
         String display = adapterName.length() > 30 ? adapterName.substring(0, 30) + "..." : adapterName;

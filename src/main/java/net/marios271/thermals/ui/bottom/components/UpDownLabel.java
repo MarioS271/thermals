@@ -6,10 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UpDownLabel extends JLabel {
-    char _c;
-    Color _activeColor;
-    String _unit;
-    double _value;
+    private char _c;
+    private Color _activeColor;
+    private String _unit;
+    private double _value;
 
     public UpDownLabel(char c, Color activeColor, String unit, double initialValue) {
         _c = c;

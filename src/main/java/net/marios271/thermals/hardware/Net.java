@@ -6,7 +6,6 @@ public class Net {
     private NetworkIF networkIF;
 
     private String name;
-    private volatile String ip;
     private volatile double uploadMBs;
     private volatile double downloadMBs;
 
@@ -14,11 +13,10 @@ public class Net {
     private long prevBytesRecv;
     private long prevTimestamp;
 
-    public Net init(HwManager _hwManager, NetworkIF _networkIF) {
+    public Net init(NetworkIF _networkIF) {
         networkIF = _networkIF;
 
         name = networkIF.getDisplayName();
-        ip = networkIF.getIPv4addr().length > 0 ? networkIF.getIPv4addr()[0] : "N/A";
 
         prevBytesSent = networkIF.getBytesSent();
         prevBytesRecv = networkIF.getBytesRecv();
@@ -31,8 +29,6 @@ public class Net {
 
     public void update() {
         networkIF.updateAttributes();
-
-        ip = networkIF.getIPv4addr().length > 0 ? networkIF.getIPv4addr()[0] : "N/A";
 
         long currentSent = networkIF.getBytesSent();
         long currentRecv = networkIF.getBytesRecv();
@@ -52,16 +48,7 @@ public class Net {
         return nif.getIPv4addr().length > 0 && nif.getIfOperStatus() == NetworkIF.IfOperStatus.UP;
     }
 
-    public String getName() {
-        return name;
-    }
-    public String getIp() {
-        return ip;
-    }
-    public double getDownloadMBs() {
-        return uploadMBs;
-    }
-    public double getUploadMBs() {
-        return uploadMBs;
-    }
+    public String getName() { return name; }
+    public double getDownloadMBs() { return downloadMBs; }
+    public double getUploadMBs() { return uploadMBs; }
 }

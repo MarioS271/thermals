@@ -4,12 +4,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class TrayIconDrawer {
-    static final int cornerRadius = 10;
+    private static final int cornerRadius = 10;
 
-    static final float coldHue = 0.33f;
-    static final float hotHue = 0f;
-    static final int coldTemp = 30;  // °C
-    static final int hotTemp = 90;  // °C
+    private static final float coldHue = 0.33f;
+    private static final float hotHue = 0f;
+    private static final int coldTemp = 30;
+    private static final int hotTemp = 90;
 
     public static BufferedImage draw(double tempCelsius, Dimension iconSize) {
         BufferedImage img = new BufferedImage(iconSize.width, iconSize.height, BufferedImage.TYPE_INT_ARGB);

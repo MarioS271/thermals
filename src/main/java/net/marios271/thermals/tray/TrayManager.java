@@ -11,8 +11,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 public class TrayManager {
-    static HwManager hwManager;
-
     static SystemTray sysTray;
     static TrayIcon icon;
 
@@ -20,7 +18,7 @@ public class TrayManager {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1)
-                Window.init(hwManager);
+                Window.init();
         }
 
         @Override
@@ -36,12 +34,11 @@ public class TrayManager {
         public void mouseExited(MouseEvent e) {}
     };
 
-    public static void start(HwManager _hwManager) {
+    public static void init() {
         if (!SystemTray.isSupported()) {
             return;
         }
 
-        hwManager = _hwManager;
         sysTray = SystemTray.getSystemTray();
 
         BufferedImage img = TrayIconDrawer.draw(-1, sysTray.getTrayIconSize());
@@ -56,12 +53,12 @@ public class TrayManager {
             System.err.println("Exception while adding icon to tray: " + e);
         }
 
-        hwManager.addUpdateListener(TrayManager::onHwUpdate);
+        HwManager.addUpdateListener(TrayManager::onHwUpdate);
     }
 
     static PopupMenu buildMenu() {
         MenuItem open = new MenuItem("Open");
-        open.addActionListener(e -> Window.init(hwManager));
+        open.addActionListener(e -> Window.init());
 
         MenuItem exit = new MenuItem("Exit");
         exit.addActionListener(e -> System.exit(0));
@@ -74,9 +71,9 @@ public class TrayManager {
     }
 
     public static void onHwUpdate() {
-        double cpuTemp = hwManager.cpu().getTempC();
+        double cpuTemp = HwManager.cpu().getTempC();
         double total = 0; int count = 0;
-        for (Gpu gpu : hwManager.gpus()) { total += gpu.getTempC(); count++; }
+        for (Gpu gpu : HwManager.gpus()) { total += gpu.getTempC(); count++; }
         double gpuTemp = count > 0 ? total / count : 0;
 
         icon.setImage(TrayIconDrawer.draw(cpuTemp, sysTray.getTrayIconSize()));
@@ -87,7 +84,5 @@ public class TrayManager {
         );
     }
 
-    public static boolean isSupported() {
-        return SystemTray.isSupported();
-    }
+    public static boolean isSupported() { return SystemTray.isSupported(); }
 }

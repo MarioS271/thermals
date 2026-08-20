@@ -10,21 +10,17 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class MiddlePanel extends JPanel {
-    final int topPadding = 10;
-    final int bottomPadding = 0;
-    final int sidePadding = 10;
+    private final int topPadding = 10;
+    private final int bottomPadding = 0;
+    private final int sidePadding = 10;
 
-    HwManager hwManager;
+    private ArrayList<GpuPanel> gpuPanels = new ArrayList<>();
 
-    ArrayList<GpuPanel> gpuPanels = new ArrayList<>();
-
-    public MiddlePanel(HwManager _hwManager) {
+    public MiddlePanel() {
         super(new BorderLayout());
 
-        hwManager = _hwManager;
-
-        for (Gpu gpu : hwManager.gpus()) {
-            gpuPanels.add(new GpuPanel(hwManager, gpu.getGpuIndex()));
+        for (Gpu gpu : HwManager.gpus()) {
+            gpuPanels.add(new GpuPanel(gpu.getGpuIndex()));
         }
         if (gpuPanels.isEmpty()) {
             setVisible(false);

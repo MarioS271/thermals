@@ -16,40 +16,40 @@ public class CpuPanel extends ComponentPanel {
     private static final Color usagePctColor = Color.RED;
     private static final Color tempCColor = new Color(255, 150, 150);
 
-    final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    int datasetCurrentCol = 0;
+    private final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    private int datasetCurrentCol = 0;
 
-    HwManager hwManager;
+    private Cpu cpu;
 
-    Stat usageStat;
-    Stat coresUsageStat;
-    Stat clockSpdStat;
-    Stat tempStat;
+    private Stat usageStat;
+    private Stat coresUsageStat;
+    private Stat clockSpdStat;
+    private Stat tempStat;
 
-    public CpuPanel(HwManager _hwManager) {
-        hwManager = _hwManager;
-
-        String cpuName = _hwManager.cpu().getCpuName();
+    public CpuPanel() {
+        String cpuName = HwManager.cpu().getCpuName();
         super("CPU  -  " + cpuName);
 
+        cpu = HwManager.cpu();
+
         usageStat = new Stat(
-            Integer.toString(hwManager.cpu().getCpuUsagePct()),
+            Integer.toString(HwManager.cpu().getCpuUsagePct()),
             "%",
             "Usage",
             usagePctColor
         );
         coresUsageStat = new Stat(
-            Helpers.doubleAsSinglePrecisionString(hwManager.cpu().getCpuCoreUsage()),
-            String.format("/%d", hwManager.cpu().getLogicalCores()),
+            Helpers.doubleAsSinglePrecisionString(cpu.getCpuCoreUsage()),
+            String.format("/%d", cpu.getLogicalCores()),
             "Core Usage"
         );
         clockSpdStat = new Stat(
-            Helpers.doubleAsSinglePrecisionString(hwManager.cpu().getClockSpeedGhz()),
+            Helpers.doubleAsSinglePrecisionString(cpu.getClockSpeedGhz()),
             "GHz",
             "Clock Speed"
         );
         tempStat = new Stat(
-            hwManager.cpu().getTempCFormatted(),
+            cpu.getTempCFormatted(),
             "°C",
             "Temperature",
             tempCColor
@@ -76,8 +76,6 @@ public class CpuPanel extends ComponentPanel {
     }
 
     public void update() {
-        Cpu cpu = hwManager.cpu();
-
         final int usagePct = cpu.getCpuUsagePct();
         final double tempC = cpu.getTempC();
 

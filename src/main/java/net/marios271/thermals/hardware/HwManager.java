@@ -14,25 +14,25 @@ import java.util.List;
 import java.util.Set;
 
 public class HwManager {
-    private SystemInfo sysInfo;
-    private HardwareAbstractionLayer hal;
+    private static SystemInfo sysInfo;
+    private static HardwareAbstractionLayer hal;
 
-    private Cpu cpu;
-    private Ram ram;
-    private ArrayList<Gpu> gpus = new ArrayList<>();
-    private ArrayList<Disk> disks = new ArrayList<>();
-    private ArrayList<Net> nets = new ArrayList<>();
+    private static Cpu cpu;
+    private static Ram ram;
+    private static ArrayList<Gpu> gpus = new ArrayList<>();
+    private static ArrayList<Disk> disks = new ArrayList<>();
+    private static ArrayList<Net> nets = new ArrayList<>();
 
-    private Thread pollingThread;
+    private static Thread pollingThread;
 
     private static final Set<String> IGNORED_FS_TYPES = Set.of(
         "tmpfs", "devtmpfs", "sysfs", "proc", "cgroup",
         "cgroup2", "pstore", "none", "overlay", "squashfs"
     );
 
-    private final List<HwUpdateListener> listeners = new ArrayList<>();
+    private static final List<Runnable> listeners = new ArrayList<>();
 
-    public void init() {
+    public static void init() {
         sysInfo = new SystemInfo();
         hal = sysInfo.getHardware();
 
@@ -55,18 +55,18 @@ public class HwManager {
             } catch (Exception _) {}
         }
 
-        cpu = new Cpu().init(this);
-        ram = new Ram().init(this);
+        cpu = new Cpu().init();
+        ram = new Ram().init();
         for (int i = 0; i < numGpus; ++i)
-            gpus.add(new Gpu().init(this, readerData, i));
+            gpus.add(new Gpu().init(readerData, i));
         for (OSFileStore fileStore : sysInfo.getOperatingSystem().getFileSystem().getFileStores()) {
             if (Platform.isLinux() && IGNORED_FS_TYPES.contains(fileStore.getType()))
                 continue;
-            disks.add(new Disk().init(this, fileStore));
+            disks.add(new Disk().init(fileStore));
         }
         for (NetworkIF nif : hal.getNetworkIFs()) {
             if (Net.isValid(nif)) {
-                nets.add(new Net().init(this, nif));
+                nets.add(new Net().init(nif));
             }
         }
 
@@ -82,7 +82,7 @@ public class HwManager {
         pollingThread.start();
     }
 
-    public void update() {
+    public static void update() {
         SensorData readerData = null;
         if (Platform.isWindows())
             readerData = WindowsReader.requestData();
@@ -96,34 +96,20 @@ public class HwManager {
         for (Net net : nets)
             net.update();
 
-        listeners.forEach(HwUpdateListener::onHwUpdate);
+        listeners.forEach(Runnable::run);
     }
 
-    public void addUpdateListener(HwUpdateListener listener) {
+    public static void addUpdateListener(Runnable listener) {
         listeners.add(listener);
         System.out.println("added update listener: " + listener);
     }
 
-    public SystemInfo sysInfo() {
-        return sysInfo;
-    }
-    public HardwareAbstractionLayer hal() {
-        return hal;
-    }
+    public static SystemInfo sysInfo() { return sysInfo; }
+    public static HardwareAbstractionLayer hal() { return hal; }
 
-    public Cpu cpu() {
-        return cpu;
-    }
-    public Ram ram() {
-        return ram;
-    }
-    public ArrayList<Gpu> gpus() {
-        return gpus;
-    }
-    public ArrayList<Disk> disks() {
-        return disks;
-    }
-    public ArrayList<Net> nets() {
-        return nets;
-    }
+    public static Cpu cpu() { return cpu; }
+    public static Ram ram() { return ram; }
+    public static ArrayList<Gpu> gpus() { return gpus; }
+    public static ArrayList<Disk> disks() { return disks; }
+    public static ArrayList<Net> nets() { return nets; }
 }

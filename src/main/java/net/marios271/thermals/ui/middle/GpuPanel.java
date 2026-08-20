@@ -16,24 +16,22 @@ public class GpuPanel extends ComponentPanel {
     private static final Color usagePctColor = Color.GREEN;
     private static final Color tempCColor = new Color(180, 255, 180);
 
-    final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    int datasetCurrentCol = 0;
+    private final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    private int datasetCurrentCol = 0;
 
-    HwManager hwManager;
-    int gpuIndex;
+    private Gpu gpu;
 
-    Stat usageStat;
-    Stat tempStat;
-    Stat vramUsedStat;
+    private Stat usageStat;
+    private Stat tempStat;
+    private Stat vramUsedStat;
 
-    public GpuPanel(HwManager _hwManager, int _gpuIndex) {
-        hwManager = _hwManager;
-        gpuIndex = _gpuIndex;
+    public GpuPanel(int gpuIndex) {
+        Gpu _gpu = HwManager.gpus().get(gpuIndex);
 
-        Gpu gpu = _hwManager.gpus().get(_gpuIndex);
-
-        super("GPU  -  " + gpu.getGpuName() + " (" + gpu.getVramTotalGbRounded() + " GB VRAM)");
+        super("GPU  -  " + _gpu.getGpuName() + " (" + _gpu.getVramTotalGbRounded() + " GB VRAM)");
         setAllSizes(UICommons.DEFAULT_PANEL_SIZE);
+
+        gpu = _gpu;
 
         usageStat = new Stat(
             Integer.toString((int)gpu.getUsagePct()),
@@ -73,8 +71,6 @@ public class GpuPanel extends ComponentPanel {
     }
 
     public void update() {
-        Gpu gpu = hwManager.gpus().get(gpuIndex);
-
         final int usagePct = (int)gpu.getUsagePct();
         final double tempC = gpu.getTempC();
 

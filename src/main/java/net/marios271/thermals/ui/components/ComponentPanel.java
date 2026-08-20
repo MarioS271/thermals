@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ComponentPanel extends JPanelRounded {
-    JLabel panelTitle;
+    private JLabel panelTitle;
 
     public ComponentPanel(String _title) {
         super(new BorderLayout());

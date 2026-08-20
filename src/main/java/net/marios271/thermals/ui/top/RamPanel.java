@@ -17,21 +17,22 @@ public class RamPanel extends ComponentPanel {
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     int datasetCurrentCol = 0;
 
-    HwManager hwManager;
+    Ram ram;
 
     Stat usedStat;
     Stat cachedStat;
     Stat freeStat;
 
-    public RamPanel(HwManager _hwManager) {
-        hwManager = _hwManager;
-        Ram ram = _hwManager.ram();
+    public RamPanel() {
+        Ram _ram = HwManager.ram();
 
-        String title = "RAM  -  " + ram.getCapacityGb() + "GB";
+        String title = "RAM  -  " + _ram.getCapacityGb() + "GB";
         if (!Platform.isLinux()) {
-            title += " " + ram.getType() + "-" + ram.getSpeedMhz();
+            title += " " + _ram.getType() + "-" + _ram.getSpeedMhz();
         }
         super(title);
+
+        ram = _ram;
 
         usedStat = new Stat(
             Helpers.doubleAsSinglePrecisionString(ram.getUsedGb()),
@@ -71,8 +72,6 @@ public class RamPanel extends ComponentPanel {
     }
 
     public void update() {
-        Ram ram = hwManager.ram();
-
         final double usedPct = ram.getUsedPct();
 
         if (datasetCurrentCol >= UICommons.MAX_GRAPH_DATASET_SIZE)

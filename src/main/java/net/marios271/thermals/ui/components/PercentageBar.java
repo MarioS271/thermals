@@ -4,10 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PercentageBar extends JComponent {
-    final int BORDER_RADIUS = 7;
-    final Color BG_COLOR = Color.GRAY;
-    int _pct;
-    Color _fillColor;
+    private final int BORDER_RADIUS = 7;
+    private final Color BG_COLOR = Color.GRAY;
+
+    private int _pct;
+    private Color _fillColor;
 
     public PercentageBar(int width, int height, int initialPct) {
         _pct = initialPct;

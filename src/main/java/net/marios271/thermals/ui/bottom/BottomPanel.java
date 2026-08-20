@@ -7,23 +7,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BottomPanel extends JPanel {
-    final int topPadding = 10;
-    final int bottomPadding = 10;
-    final int sidePadding = 10;
+    private final int topPadding = 10;
+    private final int bottomPadding = 10;
+    private final int sidePadding = 10;
 
-    HwManager _hwManager;
+    private DiskPanel diskPanel;
+    private NetPanel netPanel;
 
-    DiskPanel diskPanel;
-    NetPanel netPanel;
-
-    public BottomPanel(HwManager hwManager) {
+    public BottomPanel() {
         super();
         setLayout(new GridBagLayout());
 
-        _hwManager = hwManager;
-
-        diskPanel = new DiskPanel(hwManager);
-        netPanel = new NetPanel(hwManager);
+        diskPanel = new DiskPanel();
+        netPanel = new NetPanel();
 
         setBorder(UICommons.fourAxisPadding(topPadding, sidePadding, bottomPadding, sidePadding));
         setBackground(UICommons.WINDOW_BACKGROUND_COLOR);
@@ -46,8 +42,8 @@ public class BottomPanel extends JPanel {
     }
 
     public void update() {
-        diskPanel.update(_hwManager.disks());
-        netPanel.update(_hwManager.nets());
+        diskPanel.update(HwManager.disks());
+        netPanel.update(HwManager.nets());
     }
 
     @Override

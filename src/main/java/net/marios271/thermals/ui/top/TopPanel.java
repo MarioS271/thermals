@@ -11,18 +11,14 @@ public class TopPanel extends JPanel {
     final int bottomPadding = 0;
     final int sidePadding = 10;
 
-    HwManager _hwManager;
-
     CpuPanel cpuPanel;
     RamPanel ramPanel;
 
-    public TopPanel(HwManager hwManager) {
+    public TopPanel() {
         super(new GridBagLayout());
 
-        _hwManager = hwManager;
-
-        cpuPanel = new CpuPanel(_hwManager);
-        ramPanel = new RamPanel(_hwManager);
+        cpuPanel = new CpuPanel();
+        ramPanel = new RamPanel();
 
         setBorder(UICommons.fourAxisPadding(
             topPadding,

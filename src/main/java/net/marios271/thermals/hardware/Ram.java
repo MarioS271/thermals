@@ -1,15 +1,15 @@
 package net.marios271.thermals.hardware;
 
 import net.marios271.thermals.Platform;
-import oshi.SystemInfo;
 import oshi.hardware.GlobalMemory;
+import oshi.hardware.PhysicalMemory;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class Ram {
-    private SystemInfo sysInfo;
     private GlobalMemory mem;
 
     private int capacityGb;
@@ -21,11 +21,9 @@ public class Ram {
     private volatile double cachedGb;
     private volatile double freeGb;
 
-    public Ram init(HwManager _hwManager) {
-        sysInfo = _hwManager.sysInfo();
-
-        mem = sysInfo.getHardware().getMemory();
-        var sticks = mem.getPhysicalMemory();
+    public Ram init() {
+        mem = HwManager.sysInfo().getHardware().getMemory();
+        List<PhysicalMemory> sticks = mem.getPhysicalMemory();
 
         capacityGb = (int)Math.ceil(mem.getTotal() / 1_073_741_824.0);
 
@@ -64,26 +62,12 @@ public class Ram {
         }
     }
 
-    public int getCapacityGb() {
-        return capacityGb;
-    }
-    public int getSpeedMhz() {
-        return speedMhz;
-    }
-    public String getType() {
-        return type;
-    }
+    public int getCapacityGb() { return capacityGb; }
+    public int getSpeedMhz() { return speedMhz; }
+    public String getType() { return type; }
 
-    public int getUsedPct() {
-        return usedPct;
-    }
-    public double getUsedGb() {
-        return usedGb;
-    }
-    public double getCachedGb() {
-        return cachedGb;
-    }
-    public double getFreeGb() {
-        return freeGb;
-    }
+    public int getUsedPct() { return usedPct; }
+    public double getUsedGb() { return usedGb; }
+    public double getCachedGb() { return cachedGb; }
+    public double getFreeGb() { return freeGb; }
 }
